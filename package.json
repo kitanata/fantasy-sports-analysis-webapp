@@ -1,0 +1,15 @@
+{
+  "name": "ac-karma-sports-ffa",
+  "version": "0.0.0",
+  "description": "AC Karma Sports Fantasy Football Analytics project.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blueshiftedtech/ac-karma-sports-ffa.git"
+  },
+  "author": "",
+  "homepage": "https://github.com/blueshiftedtech/ac-karma-sports-ffa#readme",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-ruby-sass": "^2.0.6"
+  }
+}
