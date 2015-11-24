@@ -1,7 +1,8 @@
 from django.db import models
+from django.conf import settings
 
 
-class Subscription(models.Model):
+class Product(models.Model):
     DAILY = 'daily'
     MONTHLY = 'monthly'
     DURATION_CHOICES = (
@@ -20,7 +21,15 @@ class Subscription(models.Model):
 class LineUp(models.Model):
     pdf = models.FileField()
     date_uploaded = models.DateField(auto_now_add=True)
-    subscriptions = models.ManyToManyField(Subscription, blank=True)
+    products = models.ManyToManyField(Product, blank=True)
 
     class Meta:
         verbose_name = 'Line Up'
+
+
+class Subscription(models.Model):
+    product = models.ForeignKey(Product)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+
+    def __str__(self):
+        return '%s subscribed to %s' % (self.user.email, self.product.name,)
