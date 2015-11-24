@@ -13,10 +13,6 @@ class Subscription(models.Model):
     duration = models.CharField(max_length=24, choices=DURATION_CHOICES)
     sport = models.CharField(max_length=24)
 
-    @staticmethod
-    def autocomplete_search_fields():
-        return ("id__iexact", "name__icontains",)
-
     def __str__(self):
         return '%s' % self.name
 
