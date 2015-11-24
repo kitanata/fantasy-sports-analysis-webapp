@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <form method="POST" action="{% url 'signup' %}" class="col-sm-8 col-sm-offset-2">
+            {% csrf_token %}
+            {% if form.errors %}
+                <p>Your username and password didn't match. Please try again.</p>
+            {% endif %}
+            <div class="form-group">
+                {{ form.username.label_tag }}
+                <input
+                  class="form-control"
+                  type="email"
+                  placeholder="example@example.com"
+                  name="{{ form.username.html_name }}"
+                  id="{{ form.username.id_for_label}}">
+            </div>
+            <div class="form-group">
+                {{ form.password.label_tag }}
+                <input
+                  class="form-control"
+                  type="password"
+                  placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"
+                  name="{{ form.password.html_name }}"
+                  id="{{ form.password.id_for_label}}">
+            </div>
+
+            <button type="submit" class="btn btn-default col-xs-12">Login</button>
+            <input type="hidden" name="next" value="{{ next }}">
+        </form>
+    </div>
+</div>
+{% endblock %}

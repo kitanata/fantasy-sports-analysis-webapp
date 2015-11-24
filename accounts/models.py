@@ -54,8 +54,8 @@ class EmailUser(AbstractBaseUser, PermissionsMixin):
     """
     email = models.EmailField(_('email address'), max_length=255,
                               unique=True, db_index=True)
-    first_name = models.CharField(_('first name'), max_length=255)
-    last_name = models.CharField(_('last name'), max_length=255)
+    first_name = models.CharField(_('first name'), max_length=255, blank=True)
+    last_name = models.CharField(_('last name'), max_length=255, blank=True)
     is_staff = models.BooleanField(_('staff status'),
                                    default=False,
                                    help_text=_('Designates whether the user'
@@ -72,7 +72,7 @@ class EmailUser(AbstractBaseUser, PermissionsMixin):
     objects = EmailUserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name']
+    REQUIRED_FIELDS = []
 
     class Meta:
         verbose_name = _('user')
