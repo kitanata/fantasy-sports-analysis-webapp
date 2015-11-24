@@ -26,13 +26,19 @@
         <nav class="navbar navbar-default">
             <div class="container">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="#">Brand</a>
+                    <a class="navbar-brand" href="{% url 'home' %}"><img src="{% static "images/logo.png" %}"></a>
                 </div>
                 <ul class="nav navbar-nav">
-                    <li><a href="{% url 'login' %}">Login</a></li>
-                    <li><a href="{% url 'signup' %}">Sign Up</a></li>
-                    <li><a href="#">{{ request.user.email }}</a></li>
-                    <li><a href="{% url 'logout' %}">Logout</a></li>
+
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    {% if request.user.is_authenticated %}
+                        <li><a href="#">{{ request.user.email }}</a></li>
+                        <li><a href="{% url 'logout' %}">Logout</a></li>
+                    {% else %}
+                        <li><a href="{% url 'login' %}">Login</a></li>
+                        <li><a href="{% url 'signup' %}">Sign Up</a></li>
+                    {% endif %}
                 </ul>
             </div>
         </nav>
