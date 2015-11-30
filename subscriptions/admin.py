@@ -7,10 +7,28 @@ from .models import LineUp, Subscription, Product
 
 @admin.register(LineUp)
 class LineUpAdmin(admin.ModelAdmin):
+    list_display = (
+        '__str__',
+        'date_uploaded',
+        'date_email_sent',
+        'products_list'
+    )
+
     formfield_overrides = {
         models.ManyToManyField: {'widget': CheckboxSelectMultiple},
     }
 
 
-admin.site.register(Subscription)
-admin.site.register(Product)
+@admin.register(Subscription)
+class SubscriptionAdmin(admin.ModelAdmin):
+    list_display = (
+        '__str__',
+        'user',
+        'product',
+        'date_subscribed'
+    )
+
+
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    pass

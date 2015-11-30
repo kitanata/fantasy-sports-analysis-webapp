@@ -115,3 +115,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 LOGIN_REDIRECT_URL = '/'
+
+GRAPPELLI_ADMIN_TITLE = 'AC Karma Sports'

@@ -28,7 +28,7 @@ class SubscriptionsDashboardTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_context_is_populated_with_lineups(self):
-        today = timezone.now().date()
+        today = timezone.now()
         subscription = Subscription.objects.create(user=self.user,
                                                    product=self.product1)
 
@@ -54,7 +54,7 @@ class SubscriptionsDashboardTest(TestCase):
         self.assertEqual(data[0]['lineups'][0], lineup)
 
     def test_lineups_only_appear_if_user_subscribed_prior_to_upload(self):
-        today = timezone.now().date()
+        today = timezone.now()
         three_days_ago = today - datetime.timedelta(days=3)
 
         subscription = Subscription.objects.create(user=self.user,
@@ -72,7 +72,7 @@ class SubscriptionsDashboardTest(TestCase):
         self.assertEqual(len(data), 0)
 
     def test_lineups_have_a_two_week_cutoff(self):
-        today = timezone.now().date()
+        today = timezone.now()
         old = today - datetime.timedelta(days=15)
 
         subscription = Subscription.objects.create(user=self.user,
