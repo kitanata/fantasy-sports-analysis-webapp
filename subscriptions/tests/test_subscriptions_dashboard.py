@@ -52,3 +52,26 @@ class SubscriptionsDashboardTest(TestCase):
         self.assertEqual(data[0]['date'], today)
         self.assertEqual(len(data[0]['lineups']), 1)
         self.assertEqual(data[0]['lineups'][0], lineup)
+
+    def test_context_is_populated_with_lineups_with_a_two_week_cutoff(self):
+        today = timezone.now().date()
+        old = today - datetime.timedelta(days=15)
+
+        subscription = Subscription.objects.create(user=self.user,
+                                                   product=self.product1)
+
+        lineup = LineUp.objects.create(pdf='/tmp/notreal', date_uploaded=today)
+        lineup.products.add(self.product1)
+        lineup.save()
+
+        old_lineup = LineUp.objects.create(pdf='/tmp/notreal', date_uploaded=old)
+        old_lineup.products.add(self.product1)
+        old_lineup.save()
+
+        response = dashboard(self.request)
+        data = response.context_data['lineups_by_date']
+
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]['date'], today)
+        self.assertEqual(len(data[0]['lineups']), 1)
+        self.assertEqual(data[0]['lineups'][0], lineup)
