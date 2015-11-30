@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 
 
 class Product(models.Model):
@@ -12,7 +13,6 @@ class Product(models.Model):
 
     name = models.CharField(max_length=128)
     duration = models.CharField(max_length=24, choices=DURATION_CHOICES)
-    sport = models.CharField(max_length=24)
 
     def __str__(self):
         return '%s' % self.name
@@ -20,11 +20,12 @@ class Product(models.Model):
 
 class LineUp(models.Model):
     pdf = models.FileField()
-    date_uploaded = models.DateField(auto_now_add=True)
-    products = models.ManyToManyField(Product, blank=True)
+    date_uploaded = models.DateField(default=timezone.now)
+    products = models.ManyToManyField(Product)
 
     class Meta:
         verbose_name = 'Line Up'
+        get_latest_by = 'date_uploaded'
 
 
 class Subscription(models.Model):
