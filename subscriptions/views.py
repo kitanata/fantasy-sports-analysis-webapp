@@ -12,9 +12,12 @@ def dashboard(request):
     # Products a user is subscribed to.
     products = request.user.product_set.all()
 
+    # ordered lineups based on the above products.
     lineups = LineUp.objects.filter(
         products__in=products).order_by('-date_uploaded')
 
+    # and her we group the lineups returned by the date they were uploaded,
+    # so that we can format the output easily
     for date, group in groupby(lineups, key=lambda x: x.date_uploaded):
         lineups_by_date.append({
             'date': date,

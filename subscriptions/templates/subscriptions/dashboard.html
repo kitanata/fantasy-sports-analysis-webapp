@@ -2,13 +2,16 @@
 {% load staticfiles %}
 
 {% block content %}
-    <div class="jumbotron">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12 text-center">
-                    <h1>Your Secret Weapon</h1>
+    <div class="container">
+        <div class="row">
+            {% for group in lineups_by_date %}
+                <div class="col-xs-12">
+                    <h1>{{ group.date|date:'l, F j, Y' }}</h1>
+                    {% for lineup in group.lineups %}
+                        <p>{{ lineup.pdf }}</p>
+                    {% endfor %}
                 </div>
-            </div>
+            {% endfor %}
         </div>
     </div>
 {% endblock %}

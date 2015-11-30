@@ -26,7 +26,11 @@
         <nav class="navbar navbar-default">
             <div class="container">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="{% url 'home' %}"><img src="{% static "images/logo.png" %}"></a>
+                    {% if request.user.is_authenticated %}
+                        <a class="navbar-brand" href="{% url 'dashboard' %}"><img src="{% static "images/logo.png" %}"></a>
+                    {% else %}
+                        <a class="navbar-brand" href="{% url 'home' %}"><img src="{% static "images/logo.png" %}"></a>
+                    {% endif %}
                 </div>
                 <ul class="nav navbar-nav">
 
