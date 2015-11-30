@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-4">
+                <h1>My Account</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                {% include "accounts/left_menu.html" %}
+            </div>
+            <div class="col-sm-8">
+                {% block child_content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
