@@ -8,7 +8,11 @@
                 <div class="col-xs-12">
                     <h1>{{ group.date|date:'l, F j, Y' }}</h1>
                     {% for lineup in group.lineups %}
-                        <p>{{ lineup.pdf }}</p>
+                        {% if lineup.product.first.image %}
+                            <img src="{{ lineup.product.first.image.url }}">
+                        {% else %}
+                            <img src="{% static "images/nba_silver_large.png" %}">
+                        {% endif %}
                     {% endfor %}
                 </div>
             {% endfor %}
