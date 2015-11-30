@@ -13,6 +13,8 @@ class Product(models.Model):
 
     name = models.CharField(max_length=128)
     duration = models.CharField(max_length=24, choices=DURATION_CHOICES)
+    subscribed = models.ManyToManyField(settings.AUTH_USER_MODEL,
+                                        through='Subscription')
 
     def __str__(self):
         return '%s' % self.name
@@ -31,6 +33,7 @@ class LineUp(models.Model):
 class Subscription(models.Model):
     product = models.ForeignKey(Product)
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    date_subscribed = models.DateField(default=timezone.now)
 
     def __str__(self):
         return '%s subscribed to %s' % (self.user.email, self.product.name,)

@@ -13,8 +13,8 @@ class SubscriptionsDashboardTest(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
         self.user = get_user_model().objects.create_user('example@example.com')
-        request = self.factory.get(reverse('dashboard'))
-        request.user = self.user
+        self.request = self.factory.get(reverse('dashboard'))
+        self.request.user = self.user
 
         self.product1 = Product.objects.create(name='Test Product 1',
                                                duration=Product.MONTHLY)
@@ -28,12 +28,13 @@ class SubscriptionsDashboardTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_context_is_populated_with_lineups(self):
-        today = timezone.now()
+        today = timezone.now().date()
         subscription = Subscription.objects.create(user=self.user,
                                                    product=self.product1)
 
         lineup = LineUp.objects.create(pdf='/tmp/notreal', date_uploaded=today)
-        lineup.subscriptions.add(subscription)
+        lineup.products.add(self.product1)
+        lineup.save()
 
         response = dashboard(self.request)
         data = response.context_data['lineups_by_date']
