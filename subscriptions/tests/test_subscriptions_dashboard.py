@@ -61,7 +61,8 @@ class SubscriptionsDashboardTest(TestCase):
                                                    product=self.product1,
                                                    date_subscribed=today)
 
-        lineup = LineUp.objects.create(pdf='/tmp/notreal', date_uploaded=three_days_ago)
+        lineup = LineUp.objects.create(pdf='/tmp/notreal',
+                                       date_uploaded=three_days_ago)
         lineup.products.add(self.product1)
         lineup.save()
 
@@ -81,7 +82,8 @@ class SubscriptionsDashboardTest(TestCase):
         lineup.products.add(self.product1)
         lineup.save()
 
-        old_lineup = LineUp.objects.create(pdf='/tmp/notreal', date_uploaded=old)
+        old_lineup = LineUp.objects.create(pdf='/tmp/notreal',
+                                           date_uploaded=old)
         old_lineup.products.add(self.product1)
         old_lineup.save()
 
