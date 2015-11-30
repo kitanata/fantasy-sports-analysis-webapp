@@ -53,7 +53,24 @@ class SubscriptionsDashboardTest(TestCase):
         self.assertEqual(len(data[0]['lineups']), 1)
         self.assertEqual(data[0]['lineups'][0], lineup)
 
-    def test_context_is_populated_with_lineups_with_a_two_week_cutoff(self):
+    def test_lineups_only_appear_if_user_subscribed_prior_to_upload(self):
+        today = timezone.now().date()
+        three_days_ago = today - datetime.timedelta(days=3)
+
+        subscription = Subscription.objects.create(user=self.user,
+                                                   product=self.product1,
+                                                   date_subscribed=today)
+
+        lineup = LineUp.objects.create(pdf='/tmp/notreal', date_uploaded=three_days_ago)
+        lineup.products.add(self.product1)
+        lineup.save()
+
+        response = dashboard(self.request)
+        data = response.context_data['lineups_by_date']
+
+        self.assertEqual(len(data), 0)
+
+    def test_lineups_have_a_two_week_cutoff(self):
         today = timezone.now().date()
         old = today - datetime.timedelta(days=15)
 
