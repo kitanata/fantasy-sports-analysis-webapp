@@ -45,6 +45,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     'debug_toolbar',
+    'crispy_forms',
 
     'accounts',
     'subscriptions',
@@ -117,3 +118,5 @@ STATIC_URL = '/static/'
 LOGIN_REDIRECT_URL = '/'
 
 GRAPPELLI_ADMIN_TITLE = 'AC Karma Sports'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
