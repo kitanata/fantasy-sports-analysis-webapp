@@ -10,9 +10,18 @@ from ..views import user_subscriptions
 class UserSubscriptionsTest(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
-        self.user = get_user_model().objects.create_user('example@example.com')
-        self.request = self.factory.get(reverse('dashboard'))
-        self.request.user = self.user
+        user = get_user_model().objects.create_user('example@example.com')
+        self.request = self.factory.get(reverse('user_subscriptions'))
+        self.request.user = user
 
-        self.product1 = Product.objects.create(name='Test Product 1',
-                                               duration=Product.MONTHLY)
+        sport = Sport.objects.create(name='Football')
+
+        self.product = Product.objects.create(
+            name='Test Product 1',
+            duration=Product.MONTHLY,
+            sport=sport
+        )
+
+    def test_returns_200(self):
+        response = user_subscriptions(self.request)
+        self.assertEqual(response.status_code, 200)
