@@ -10,6 +10,9 @@ class Sport(models.Model):
                    'a display friendly name')
     )
 
+    def __str__(self):
+        return '%s' % self.name
+
 
 class Product(models.Model):
     DAILY = 'daily'
@@ -21,10 +24,8 @@ class Product(models.Model):
 
     name = models.CharField(max_length=128)
     duration = models.CharField(max_length=24, choices=DURATION_CHOICES)
-
     sport = models.ForeignKey(Sport, null=True)
-
-    price = models.DecimalField(max_digits=8, decimal_places=2)
+    price = models.DecimalField(max_digits=8, decimal_places=2, default='0.00')
     subscribed = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         through='Subscription'

@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.db import models
 from django.forms import CheckboxSelectMultiple
 
-from .models import LineUp, Subscription, Product
+from .models import LineUp, Subscription, Product, Sport
 
 
 @admin.register(LineUp)
@@ -11,7 +11,7 @@ class LineUpAdmin(admin.ModelAdmin):
         '__str__',
         'date_uploaded',
         'date_email_sent',
-        'products_list'
+        'products_list',
     )
 
     formfield_overrides = {
@@ -25,10 +25,20 @@ class SubscriptionAdmin(admin.ModelAdmin):
         '__str__',
         'user',
         'product',
-        'date_subscribed'
+        'date_subscribed',
     )
 
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
+    list_display = (
+        'name',
+        'sport',
+        'price',
+        'duration',
+    )
+
+
+@admin.register(Sport)
+class SportAdmin(admin.ModelAdmin):
     pass

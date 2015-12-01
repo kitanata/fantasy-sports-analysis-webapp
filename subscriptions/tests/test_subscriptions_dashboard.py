@@ -18,10 +18,6 @@ class SubscriptionsDashboardTest(TestCase):
 
         self.product1 = Product.objects.create(name='Test Product 1',
                                                duration=Product.MONTHLY)
-        self.product2 = Product.objects.create(name='Test Product 2',
-                                               duration=Product.MONTHLY)
-        self.product3 = Product.objects.create(name='Test Product 3',
-                                               duration=Product.MONTHLY)
 
     def test_returns_200_on_get(self):
         response = dashboard(self.request)

@@ -40,3 +40,8 @@ def dashboard(request):
     return TemplateResponse(request, 'subscriptions/dashboard.html', {
         'lineups_by_date': lineups_by_date
     })
+
+
+@login_required
+def user_subscriptions(request):
+    pass
