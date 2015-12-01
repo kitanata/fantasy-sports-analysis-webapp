@@ -3,6 +3,14 @@ from django.conf import settings
 from django.utils import timezone
 
 
+class Sport(models.Model):
+    name = models.CharField(
+        max_length=128,
+        help_text=('Will be used to group subscriptions together, should be'
+                   'a display friendly name')
+    )
+
+
 class Product(models.Model):
     DAILY = 'daily'
     MONTHLY = 'monthly'
@@ -13,6 +21,10 @@ class Product(models.Model):
 
     name = models.CharField(max_length=128)
     duration = models.CharField(max_length=24, choices=DURATION_CHOICES)
+
+    sport = models.ForeignKey(Sport, null=True)
+
+    price = models.DecimalField(max_digits=8, decimal_places=2)
     subscribed = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         through='Subscription'
