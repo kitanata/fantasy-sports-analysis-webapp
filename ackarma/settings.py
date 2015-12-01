@@ -120,8 +120,3 @@ LOGIN_REDIRECT_URL = '/'
 GRAPPELLI_ADMIN_TITLE = 'AC Karma Sports'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
-
-import warnings
-warnings.filterwarnings(
-        'error', r"DateTimeField .* received a naive datetime",
-        RuntimeWarning, r'django\.db\.models\.fields')

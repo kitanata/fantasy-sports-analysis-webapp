@@ -10,11 +10,11 @@
                 {% if not value.product.is_daily %}
                     <div class="col-sm-4">
                         <div class="panel panel-default">
-                            <div class="panel-body">
-                                <h5 class="text-center">{{ value.product.name }}</h5>
-                                <p class="text-center">${{ value.product.price }} monthly.</p>
+                            <div class="panel-body text-center">
+                                <h5>{{ value.product.name }}</h5>
+                                <p>${{ value.product.price }} monthly.</p>
                                 {% if product.is_subscribed %}
-                                    <button class='btn btn-primary'>Current</button>
+                                    <button class="btn btn-primary">Current</button>
                                 {% else %}
                                     <button class="btn btn-default">Sign Up</button>
                                 {% endif %}
