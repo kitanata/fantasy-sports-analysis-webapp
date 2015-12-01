@@ -72,7 +72,7 @@ class LineUp(models.Model):
 class Subscription(models.Model):
     product = models.ForeignKey(Product)
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    date_subscribed = models.DateField(
+    date_subscribed = models.DateTimeField(
         default=timezone.now,
         verbose_name='Date Subscribed',
         help_text='Records the date this subscription became active.'

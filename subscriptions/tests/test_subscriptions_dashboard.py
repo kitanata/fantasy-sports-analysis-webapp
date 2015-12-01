@@ -25,9 +25,9 @@ class SubscriptionsDashboardTest(TestCase):
 
     def test_context_is_populated_with_lineups(self):
         today = timezone.now()
-        print(today)
         subscription = Subscription.objects.create(user=self.user,
-                                                   product=self.product1)
+                                                   product=self.product1,
+                                                   date_subscribed=today)
 
         lineup = LineUp.objects.create(pdf='/tmp/notreal', date_uploaded=today)
         lineup.products.add(self.product1)
@@ -73,7 +73,8 @@ class SubscriptionsDashboardTest(TestCase):
         old = today - datetime.timedelta(days=15)
 
         subscription = Subscription.objects.create(user=self.user,
-                                                   product=self.product1)
+                                                   product=self.product1,
+                                                   date_subscribed=today)
 
         lineup = LineUp.objects.create(pdf='/tmp/notreal', date_uploaded=today)
         lineup.products.add(self.product1)
