@@ -25,6 +25,7 @@ class SubscriptionsDashboardTest(TestCase):
 
     def test_context_is_populated_with_lineups(self):
         today = timezone.now()
+        print(today)
         subscription = Subscription.objects.create(user=self.user,
                                                    product=self.product1)
 
