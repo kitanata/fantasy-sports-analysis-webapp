@@ -25,3 +25,6 @@ class UserSubscriptionsTest(TestCase):
     def test_returns_200(self):
         response = user_subscriptions(self.request)
         self.assertEqual(response.status_code, 200)
+
+    def test_context_populates_with_data(self):
+        pass

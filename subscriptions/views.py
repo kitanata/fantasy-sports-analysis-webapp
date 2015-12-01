@@ -5,7 +5,7 @@ from django.db.models import Q
 from datetime import timedelta
 from itertools import groupby, chain
 
-from .models import LineUp, Subscription
+from .models import LineUp, Subscription, Sport, Product
 
 
 @login_required
@@ -44,4 +44,25 @@ def dashboard(request):
 
 @login_required
 def user_subscriptions(request):
-    pass
+    subscriptions_by_sport = []
+    sports = Sport.objects.all().prefetch_related('product_set')
+
+    for sport in sports:
+        sport_dict = {
+            'name': sport.name,
+            'products': []
+        }
+
+        for product in sport.product_set.all():
+            subscribed = bool(product.subscribed.filter(
+                email=request.user.email).count())
+            sport_dict['products'].append({
+                'product': product,
+                'is_subscribed': subscribed
+            })
+
+        subscriptions_by_sport.append(sport_dict)
+
+    return TemplateResponse(request, 'subscriptions/user_subscriptions.html', {
+        'subscriptions_by_sport': subscriptions_by_sport
+    })

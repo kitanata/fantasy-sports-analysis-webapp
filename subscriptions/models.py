@@ -37,6 +37,12 @@ class Product(models.Model):
                    'marketing messaging related to this product.')
     )
 
+    def is_daily(self):
+        if self.duration == self.DAILY:
+            return True
+
+        return False
+
     def __str__(self):
         return '%s' % self.name
 
