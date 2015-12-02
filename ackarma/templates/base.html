@@ -41,7 +41,7 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ request.user.email }} <span class="caret"></span></a>
                             <ul class="dropdown-menu" id="user-account-dropdown">
                                 <li><a href="{% url 'account_info' %}">My Account</a></li>
-                                <li><a href="{% url 'logout' %}">Log Out</a></li>
+                                <li><a href="{% url 'logout' %}?next=/">Log Out</a></li>
                             </ul>
                         </li>
                     {% else %}
@@ -53,7 +53,13 @@
         </nav>
         {% block content %}
         {% endblock %}
+
+        {% block modal %}
+        {% endblock %}
+
         <script src="{% static "vendor/jquery/dist/jquery.min.js" %}"></script>
         <script src="{% static "vendor/bootstrap-sass/assets/javascripts/bootstrap.min.js" %}"></script>
+        {% block extra_js %}
+        {% endblock %}
     </body>
 </html>

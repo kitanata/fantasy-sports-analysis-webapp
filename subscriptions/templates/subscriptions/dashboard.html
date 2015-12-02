@@ -8,10 +8,62 @@
                 <div class="col-xs-12">
                     <h1>{{ group.date|date:'l, F j, Y' }}</h1>
                     {% for lineup in group.lineups %}
-                        <p>{{ lineup.pdf }}</p>
+                        <a href="#" class="open-download-modal" data-target="{{ lineup.pdf }}">
+                            {% if lineup.product.first.image %}
+                                <img src="{{ lineup.product.first.image.url }}">
+                            {% else %}
+                                <img src="{% static "images/nba_silver_large.png" %}">
+                            {% endif %}
+                        </a>
                     {% endfor %}
                 </div>
             {% endfor %}
         </div>
     </div>
+{% endblock %}
+
+{% block modal %}
+    <div class="modal fade" tabindex="-1" role="dialog" id="download-modal">
+          <div class="modal-dialog">
+                <div class="modal-content">
+                      <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Download PDF</h4>
+                      </div>
+                      <div class="modal-body">
+                            <p>Are you sure you'd like to download this document.</p>
+                      </div>
+                      <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                            <button type="button" class="btn btn-primary" id="download-button">Yes</button>
+                      </div>
+                </div>
+          </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        (function () {
+            var path = '';
+
+            function openDownloadModal (filePath) {
+                path = filePath;
+                $('#download-modal').modal('show');
+            }
+
+            function startDownload (filePath) {
+                window.open(filePath, '_self');
+                $('#download-modal').modal('hide');
+            }
+
+            $('#download-button').click(function () {
+                startDownload(path);
+            });
+
+            $('.open-download-modal').click(function () {
+                openDownloadModal($(this).data('target'));
+            });
+        })();
+    </script>
 {% endblock %}
