@@ -18,10 +18,6 @@ class SubscriptionsDashboardTest(TestCase):
 
         self.product1 = Product.objects.create(name='Test Product 1',
                                                duration=Product.MONTHLY)
-        self.product2 = Product.objects.create(name='Test Product 2',
-                                               duration=Product.MONTHLY)
-        self.product3 = Product.objects.create(name='Test Product 3',
-                                               duration=Product.MONTHLY)
 
     def test_returns_200_on_get(self):
         response = dashboard(self.request)
@@ -30,7 +26,8 @@ class SubscriptionsDashboardTest(TestCase):
     def test_context_is_populated_with_lineups(self):
         today = timezone.now()
         subscription = Subscription.objects.create(user=self.user,
-                                                   product=self.product1)
+                                                   product=self.product1,
+                                                   date_subscribed=today)
 
         lineup = LineUp.objects.create(pdf='/tmp/notreal', date_uploaded=today)
         lineup.products.add(self.product1)
@@ -76,7 +73,8 @@ class SubscriptionsDashboardTest(TestCase):
         old = today - datetime.timedelta(days=15)
 
         subscription = Subscription.objects.create(user=self.user,
-                                                   product=self.product1)
+                                                   product=self.product1,
+                                                   date_subscribed=today)
 
         lineup = LineUp.objects.create(pdf='/tmp/notreal', date_uploaded=today)
         lineup.products.add(self.product1)

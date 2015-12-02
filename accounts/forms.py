@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.utils.translation import ugettext_lazy as _
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
 
 
 class EmailUserCreationForm(forms.ModelForm):
@@ -87,3 +89,17 @@ class EmailUserChangeForm(forms.ModelForm):
         # This is done here, rather than on the field, because the
         # field does not have access to the initial value
         return self.initial['password']
+
+
+class EmailUserAccountInfoForm(forms.ModelForm):
+    class Meta:
+        model = get_user_model()
+        fields = ['first_name', 'last_name', 'email']
+
+    def __init__(self, *args, **kwargs):
+        super(EmailUserAccountInfoForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_id = 'account-info'
+        self.helper.form_method = 'post'
+        self.helper.form_action = 'account_info'
+        self.helper.add_input(Submit('save', 'Save Changes'))

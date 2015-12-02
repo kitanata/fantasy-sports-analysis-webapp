@@ -1,8 +1,9 @@
 from django.template.response import TemplateResponse
 from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
 
-from .forms import EmailUserCreationForm
+from .forms import EmailUserCreationForm, EmailUserAccountInfoForm
 
 
 def signup(request):
@@ -18,5 +19,19 @@ def signup(request):
     form = EmailUserCreationForm()
 
     return TemplateResponse(request, 'registration/signup.html', {
+        'form': form
+    })
+
+
+@login_required
+def account_info(request):
+    if request.method == 'POST':
+        form = EmailUserAccountInfoForm(request.POST, instance=request.user)
+        if form.is_valid:
+            form.save()
+
+    form = EmailUserAccountInfoForm(instance=request.user)
+
+    return TemplateResponse(request, 'accounts/account_info.html', {
         'form': form
     })

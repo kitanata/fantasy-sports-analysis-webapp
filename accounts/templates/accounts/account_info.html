@@ -1,6 +1,8 @@
 {% extends "accounts/base_accounts.html" %}
 {% load staticfiles %}
+{% load crispy_forms_tags %}
 
 {% block child_content %}
     <h3>Basic Information</h3>
+    {% crispy form %}
 {% endblock %}

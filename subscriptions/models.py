@@ -3,6 +3,17 @@ from django.conf import settings
 from django.utils import timezone
 
 
+class Sport(models.Model):
+    name = models.CharField(
+        max_length=128,
+        help_text=('Will be used to group subscriptions together, should be'
+                   'a display friendly name')
+    )
+
+    def __str__(self):
+        return '%s' % self.name
+
+
 class Product(models.Model):
     DAILY = 'daily'
     MONTHLY = 'monthly'
@@ -13,6 +24,8 @@ class Product(models.Model):
 
     name = models.CharField(max_length=128)
     duration = models.CharField(max_length=24, choices=DURATION_CHOICES)
+    sport = models.ForeignKey(Sport, null=True)
+    price = models.DecimalField(max_digits=8, decimal_places=2, default='0.00')
     subscribed = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         through='Subscription'
@@ -23,6 +36,12 @@ class Product(models.Model):
         help_text=('Displayed on a user\'s dashboard page, and in any'
                    'marketing messaging related to this product.')
     )
+
+    def is_daily(self):
+        if self.duration == self.DAILY:
+            return True
+
+        return False
 
     def __str__(self):
         return '%s' % self.name
@@ -59,7 +78,7 @@ class LineUp(models.Model):
 class Subscription(models.Model):
     product = models.ForeignKey(Product)
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    date_subscribed = models.DateField(
+    date_subscribed = models.DateTimeField(
         default=timezone.now,
         verbose_name='Date Subscribed',
         help_text='Records the date this subscription became active.'
