@@ -27,4 +27,19 @@ class UserSubscriptionsTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_context_populates_with_data(self):
-        pass
+        today = timezone.now()
+
+        Subscription.objects.create(
+            user=self.request.user,
+            product=self.product,
+            date_subscribed=today
+        )
+
+        response = user_subscriptions(self.request)
+        data = response.context_data['subscriptions_by_sport']
+
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]['name'], 'Football')
+        self.assertEqual(len(data[0]['products']), 1)
+        self.assertEqual(data[0]['products'][0]['product'], self.product)
+        self.assertTrue(data[0]['products'][0]['is_subscribed'])
