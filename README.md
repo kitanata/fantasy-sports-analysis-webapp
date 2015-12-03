@@ -1,5 +1,7 @@
 # AC Karma Sports FFA
 
+![Build Status](https://circleci.com/gh/blueshiftedtech/ac-karma-sports-ffa.svg?style=shield&circle-token=796af2be83a851917163ffea6df2e3de41b40f62)
+
 ### Running Locally.
 
 #### External Dependencies
