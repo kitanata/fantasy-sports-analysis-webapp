@@ -73,5 +73,5 @@ python manage.py runserver
 Just run:
 
 ```sh
-python manage.py runserver
+python manage.py test
 ```
