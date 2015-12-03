@@ -1,4 +1,4 @@
-# AC Karma Sports Fantasy Football Analytics Project.
+# AC Karma Sports FFA
 
 ### Running Locally.
 
