@@ -1,9 +1,14 @@
 from django.template.response import TemplateResponse
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 
-from .forms import EmailUserCreationForm, EmailUserAccountInfoForm
+from .forms import (
+    EmailUserCreationForm,
+    EmailUserAccountInfoForm,
+    DeleteAccountForm
+)
 
 
 def signup(request):
@@ -14,7 +19,7 @@ def signup(request):
             user = authenticate(username=form.cleaned_data['email'],
                                 password=form.cleaned_data['password1'])
             login(request, user)
-            return redirect('/')
+            return redirect(reverse('dashboard'))
 
     form = EmailUserCreationForm()
 
@@ -33,5 +38,21 @@ def account_info(request):
     form = EmailUserAccountInfoForm(instance=request.user)
 
     return TemplateResponse(request, 'accounts/account_info.html', {
+        'form': form
+    })
+
+
+@login_required
+def delete_account(request):
+    if request.method == 'POST':
+        form = DeleteAccountForm(request.POST)
+        if form.is_valid:
+            logout()
+            request.user.delete()
+            return redirect(reverse('home'))
+
+    form = DeleteAccountForm()
+
+    return TemplateResponse(request, 'accounts/delete_account.html', {
         'form': form
     })

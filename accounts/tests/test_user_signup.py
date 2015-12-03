@@ -57,7 +57,7 @@ class UserSignupTest(TestCase):
         }
 
         response = client.post(reverse('signup'), data)
-        self.assertRedirects(response, '/')
+        self.assertRedirects(response, reverse('dashboard'))
 
         # from the django source, using it to grab the next page.
         # https://github.com/django/django/blob/master/django/test/testcases.py#L292
