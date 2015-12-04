@@ -1,3 +1,5 @@
 DEBUG=True
 SECRET_KEY=5y_+zh%1=dzr64b$h^f&r7n_*(+5lx&$03%*l#z7n_!5*#+qzb
 DATABASE_URL=postgresql://localhost/ackarma
+RECURLY_API_KEY=asdf12134
+RECURLY_SUBDOMAIN=ackarma
