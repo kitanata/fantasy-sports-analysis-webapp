@@ -22,8 +22,8 @@ class Sport(models.Model):
 
 
 class Product(models.Model):
-    DAILY = 'daily'
-    MONTHLY = 'monthly'
+    DAILY = 'days'
+    MONTHLY = 'months'
     DURATION_CHOICES = (
         (DAILY, 'Daily'),
         (MONTHLY, 'Monthly'),
@@ -49,13 +49,35 @@ class Product(models.Model):
         help_text='Used to uniquely identify the product in recurly.'
     )
 
-    duration = models.CharField(max_length=24, choices=DURATION_CHOICES)
+    # Billing cycle for the product plan. Valid values for recurly are
+    # daily and monthly, so I use choices here.
+    duration = models.CharField(
+        max_length=24,
+        choices=DURATION_CHOICES,
+        help_text=('Choose whether this product is a monthly subscription '
+                   'or a one day purchase.')
+    )
+
+    # Sport is used on several pages to group products for display.
     sport = models.ForeignKey(Sport, null=True)
-    price = models.DecimalField(max_digits=8, decimal_places=2, default='0.00')
+
+    # The price of the subscription, stored as a decimal field, but
+    # converted to an integer in cents for storage on recurly.
+    price = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        default='0.00',
+        help_text='Price of the product'
+    )
+
+    # We use a through model here because we want to store additional
+    # info about the subscription.
     subscribed = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         through='Subscription'
     )
+
+    # Upload an image for display on marketing screens.
     image = models.ImageField(
         blank=True,
         null=True,
@@ -68,6 +90,9 @@ class Product(models.Model):
             return True
 
         return False
+
+    def is_monthly(self):
+        return not self.is_daily()
 
     def __str__(self):
         return '%s' % self.name
