@@ -98,13 +98,16 @@ class Product(models.Model):
     def is_monthly(self):
         return not self.is_daily()
 
+    def get_recurly_plan(self):
+        return recurly.Plan.get(self.recurly_plan_code)
+
     def __str__(self):
         return '%s' % self.name
 
     def save(self, *args, **kwargs):
         # Get plan if already existant. If not, create a new plan.
         try:
-            plan = recurly.Plan.get(self.recurly_plan_code)
+            plan = self.get_recurly_plan()
             plan.name = self.name
         except recurly.NotFoundError:
             plan = recurly.Plan(
