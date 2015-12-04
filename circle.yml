@@ -2,3 +2,5 @@ machine:
   environment:
     SECRET_KEY: circleci
     DATABASE_URL: postgresql://localhost/ackarma
+    RECURLY_API_KEY: none
+    RECURLY_SUBDOMAIN: none
