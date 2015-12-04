@@ -29,6 +29,8 @@ class Product(models.Model):
         (MONTHLY, 'Monthly'),
     )
 
+    DOLLAR_TO_CENTS = 100
+
     name = models.CharField(max_length=128)
 
     # Store the Recurly plan code in our db for lookups.
@@ -38,11 +40,13 @@ class Product(models.Model):
     recurly_plan_code = models.CharField(
         max_length=50,
         unique=True,
-        blank=True,  # We'll autopopulate this if possible, I'd think.
+        blank=False,  # We're using pre-populated fields here.
         validators=[
             RegexValidator(
                 # ignore case, a-z, 0-9, @, literal -, _, and literal .
-                regex=r'(?i)[a-z0-9@\-_\.]'
+                regex=r'(?i)[a-z0-9@\-_\.]',
+                message=('Code entered must only contain alphanumeric '
+                         'characters, as well as @, -, _, and .')
             )
         ],
         verbose_name='Recurly Plan Code',
@@ -96,6 +100,28 @@ class Product(models.Model):
 
     def __str__(self):
         return '%s' % self.name
+
+    def save(self, *args, **kwargs):
+        # Get plan if already existant. If not, create a new plan.
+        try:
+            plan = recurly.Plan.get(self.recurly_plan_code)
+            plan.name = self.name
+        except recurly.NotFoundError:
+            plan = recurly.Plan(
+                plan_code=self.recurly_plan_code,
+                name=self.name
+            )
+
+        # Convert USD price into cents.
+        amount_in_cents = recurly.Money(int(self.price * self.DOLLAR_TO_CENTS))
+        plan.unit_amount_in_cents = amount_in_cents
+
+        # Apply the selected duration (interval length defaults to 1)
+        plan.interval_unit = self.duration
+
+        # Save the model and plan in recurly.
+        plan.save()
+        super(Product, self).save(*args, **kwargs)
 
 
 class LineUp(models.Model):
