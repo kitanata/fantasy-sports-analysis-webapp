@@ -9,7 +9,7 @@ from ..views import user_subscriptions
 
 
 class UserSubscriptionsTest(TestCase):
-    @patch('recurly.Plan.save', MagicMock(name='save'))
+    @patch('recurly.Plan', MagicMock(name='Plan'))
     def setUp(self):
         self.factory = RequestFactory()
         user = get_user_model().objects.create_user('example@example.com')

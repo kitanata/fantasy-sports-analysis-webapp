@@ -6,7 +6,7 @@ from ..models import Product, Sport
 
 
 class TestProduct(TestCase):
-    @patch('recurly.Plan.save', MagicMock(name='save'))
+    @patch('recurly.Plan', MagicMock(name='Plan'))
     def setUp(self):
         self.sport = Sport.objects.create(name='Football')
         self.product = Product.objects.create(
@@ -23,15 +23,15 @@ class TestProduct(TestCase):
     def test_product_is_monthly_method(self):
         self.assertTrue(self.product.is_monthly())
 
-    @patch('recurly.Plan.get', spec=True)
+    @patch('recurly.Plan', spec=True)
     def test_get_recurly_plan(self, mock):
         plan = self.product.get_recurly_plan()
 
-        mock.assert_called_with(self.product.recurly_plan_code)
+        mock.get.assert_called_with(self.product.recurly_plan_code)
 
-    @patch('recurly.Plan.save', spec=True)
+    @patch('recurly.Plan', spec=True)
     def test_recurly_overriden_model_save(self, mock):
         self.product.save()
 
-        self.assertTrue(mock.called)
-        self.assertEqual(mock.call_count, 1)
+        self.assertTrue(mock.get.called)
+        self.assertEqual(mock.get.call_count, 1)

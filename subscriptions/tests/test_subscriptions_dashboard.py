@@ -11,7 +11,7 @@ from ..views import dashboard
 
 
 class SubscriptionsDashboardTest(TestCase):
-    @patch('recurly.Plan.save', MagicMock(name='save'))
+    @patch('recurly.Plan', MagicMock(name='Plan'))
     def setUp(self):
         self.factory = RequestFactory()
         self.user = get_user_model().objects.create_user('example@example.com')
