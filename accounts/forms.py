@@ -7,7 +7,6 @@ from crispy_forms.layout import Submit
 
 
 class EmailUserCreationForm(forms.ModelForm):
-
     """
     A form for creating new users. Includes all the required fields, plus a
     repeated password.
@@ -60,6 +59,15 @@ class EmailUserCreationForm(forms.ModelForm):
             user.save()
         return user
 
+    def __init__(self, *args, **kwargs):
+        super(EmailUserCreationForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_id = 'sign-up'
+        self.helper.form_method = 'post'
+        self.helper.form_action = 'signup'
+        self.helper.add_input(Submit('save', 'Sign Up'))
+
+
 
 class EmailUserChangeForm(forms.ModelForm):
 
@@ -103,3 +111,13 @@ class EmailUserAccountInfoForm(forms.ModelForm):
         self.helper.form_method = 'post'
         self.helper.form_action = 'account_info'
         self.helper.add_input(Submit('save', 'Save Changes'))
+
+
+class DeleteAccountForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(DeleteAccountForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_id = 'delete-account'
+        self.helper.form_method = 'post'
+        self.helper.form_action = 'delete_account'
+        self.helper.add_input(Submit('save', 'I understand, delete my account.'))
