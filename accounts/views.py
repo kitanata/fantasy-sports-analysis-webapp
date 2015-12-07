@@ -47,8 +47,8 @@ def delete_account(request):
     if request.method == 'POST':
         form = DeleteAccountForm(request.POST)
         if form.is_valid:
-            logout()
             request.user.delete()
+            logout(request)
             return redirect(reverse('home'))
 
     form = DeleteAccountForm()
