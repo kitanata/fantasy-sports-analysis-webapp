@@ -3,7 +3,7 @@ var sass = require('gulp-sass');
 
 gulp.task('sass', function () {
     return gulp.src('ackarma/static/sass/main.scss')
-        .pipe(sass({
+        .pipe(sass.sync({
             sourcemap: true,
             style: 'expanded'
         }).on('error', sass.logError))
