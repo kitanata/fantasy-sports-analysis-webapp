@@ -8,7 +8,7 @@
   },
   "author": "",
   "homepage": "https://github.com/blueshiftedtech/ac-karma-sports-ffa#readme",
-  "devDependencies": {
+  "dependencies": {
     "gulp": "^3.9.0",
     "gulp-ruby-sass": "^2.0.6"
   }
