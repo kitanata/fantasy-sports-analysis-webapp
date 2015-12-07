@@ -1,6 +1,8 @@
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.views.generic import TemplateView
+from django.conf.urls.static import static
+from django.conf import settings
 
 from accounts.views import signup
 
@@ -13,3 +15,7 @@ urlpatterns = [
     url(r'^', include('subscriptions.urls')),
     url(r'^signup/', signup, name='signup'),
 ]
+
+if settings.DEBUG:
+    urlpatterns = urlpatterns + static(settings.MEDIA_URL,
+                                       document_root=settings.MEDIA_ROOT)
