@@ -1,0 +1,4 @@
+machine:
+  environment:
+    SECRET_KEY: circleci
+    DATABASE_URL: postgresql://localhost/ackarma

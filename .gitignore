@@ -7,10 +7,10 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+.env
 env/
 build/
 develop-eggs/
-dist/
 downloads/
 eggs/
 .eggs/
@@ -20,6 +20,8 @@ parts/
 sdist/
 var/
 node_modules/
+staticfiles/
+media/
 .sass-cache/
 *.egg-info/
 .installed.cfg

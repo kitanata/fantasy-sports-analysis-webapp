@@ -1,4 +1,6 @@
-from django.test import TestCase, RequestFactory, Client
+from django.test import (
+    TestCase, RequestFactory, Client, override_settings
+)
 from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model
 from django.contrib.sessions.middleware import SessionMiddleware
@@ -47,6 +49,10 @@ class UserSignupTest(TestCase):
         self.assertIsNotNone(user)
         self.assertEqual(user.email, data['email'])
 
+    # Regular staticfiles storage over whitenoise means we don't get a
+    # ValueError due to not finding main.css (because it hasn't been built)
+    @override_settings(STATICFILES_STORAGE=('django.contrib.staticfiles'
+                                            '.storage.StaticFilesStorage'))
     def test_redirects_on_successful_post_and_logs_in(self):
         client = Client()
 
