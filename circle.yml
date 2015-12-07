@@ -2,3 +2,8 @@ machine:
   environment:
     SECRET_KEY: circleci
     DATABASE_URL: postgresql://localhost/ackarma
+deployment:
+  staging:
+    branch: master
+    heroku:
+      appname: ackarma
