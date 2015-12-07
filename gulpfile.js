@@ -16,3 +16,5 @@ gulp.task('watch', function() {
 
 // Default Task
 gulp.task('default', ['sass', 'watch']);
+
+gulp.task('build', ['sass']);

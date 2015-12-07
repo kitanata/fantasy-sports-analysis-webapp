@@ -25,6 +25,7 @@ ALLOWED_HOSTS = ['*']
 AUTH_USER_MODEL = 'accounts.EmailUser'
 
 INSTALLED_APPS = (
+    'django_gulp',
     'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
