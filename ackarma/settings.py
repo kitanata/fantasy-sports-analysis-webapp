@@ -14,6 +14,7 @@ MEDIA_URL = '/media/'
 
 DEBUG = env('DEBUG')
 
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 STATICFILES_DIRS = (
     site_base('static'),
 )
@@ -25,6 +26,7 @@ ALLOWED_HOSTS = ['*']
 AUTH_USER_MODEL = 'accounts.EmailUser'
 
 INSTALLED_APPS = (
+    'django_gulp',
     'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
