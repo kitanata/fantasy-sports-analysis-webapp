@@ -1,0 +1,9 @@
+{% extends "accounts/base_accounts.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block child_content %}
+    <h3>Delete Account</h3>
+    <p>You may delete your account at any time. However, this action is irreversible.</p>
+    {% crispy form %}
+{% endblock %}
