@@ -14,6 +14,7 @@ MEDIA_URL = '/media/'
 
 DEBUG = env('DEBUG')
 
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 STATICFILES_DIRS = (
     site_base('static'),
 )
