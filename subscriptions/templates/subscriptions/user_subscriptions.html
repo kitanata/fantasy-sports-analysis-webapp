@@ -13,7 +13,7 @@
                             <div class="panel-body text-center">
                                 <h5>{{ value.product.name }}</h5>
                                 <p>${{ value.product.price }} monthly.</p>
-                                {% if product.is_subscribed %}
+                                {% if value.is_subscribed %}
                                     <button class="btn btn-primary">Current</button>
                                 {% else %}
                                     <button class="btn btn-default">Sign Up</button>
