@@ -7,8 +7,6 @@
 #### External Dependencies
 
  - [Python 3.5](https://www.python.org/)
- - [Ruby 2.0+](https://www.ruby-lang.org/en/) (Strictly for SASS)
- - [SASS 3.4](http://sass-lang.com/)
  - [Node 5.1](https://nodejs.org/en/)
  - [Postgres 9.4](http://postgresapp.com/)
  - [VirtualEnvWrapper](https://virtualenvwrapper.readthedocs.org/en/latest/)
@@ -50,6 +48,18 @@ Once that's done, we'll be in the working directory for the project, now we can 
 ```sh
 npm install
 pip install -r requirements.txt
+```
+
+We'll also need to set up our secrets, I've included a sample .env file which you can activate by doing:
+
+```sh
+cp .sample-env .env
+```
+
+Finally, you'll want to migrate the database, by running:
+
+```sh
+python manage.py migrate
 ```
 
 And we're finally done!
