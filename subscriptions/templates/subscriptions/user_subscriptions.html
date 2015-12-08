@@ -24,7 +24,7 @@
                                     <div class="hidden confirm-change">
                                         <p>Change your Subscription?</p>
                                         <button class="btn btn-default" data-target="cancel">Cancel</button>
-                                        <button class="btn btn-primary"  data-target="{{ value.product.recurly_plan_code }}">Confirm</button>
+                                        <button class="btn btn-primary" data-target="{{ value.product.recurly_plan_code }}">Confirm</button>
                                     </div>
                                 </div>
                             </div>
@@ -49,6 +49,10 @@
                 var toBeHidden = wrapper.children('.open-confirm-change');
                 var toBeShown = wrapper.children('.confirm-change');
 
+                // Hide all already open confirmations, only letting one be open at a time.
+                toBeHidden = toBeHidden.add($('.confirm-change.show'));
+                toBeShown = toBeShown.add($('.open-confirm-change.hidden'));
+
                 toggle(toBeShown, toBeHidden);
             });
 
@@ -57,7 +61,7 @@
 
                 if (target === 'cancel') {
                     var wrapper = $(this).parents('.button-wrapper');
-                    var toBeShown = wrapper.children('.open-confirm-change');
+                    var toBeShown = $('.open-confirm-change');
                     var toBeHidden = wrapper.children('.confirm-change');
 
                     toggle(toBeShown, toBeHidden);
