@@ -13,11 +13,20 @@
                             <div class="panel-body text-center">
                                 <h5>{{ value.product.name }}</h5>
                                 <p>${{ value.product.price }} monthly.</p>
-                                {% if value.is_subscribed %}
-                                    <button class="btn btn-primary">Current</button>
-                                {% else %}
-                                    <button class="btn btn-default">Sign Up</button>
-                                {% endif %}
+                                <div class="button-wrapper">
+                                    <div class="show open-confirm-change">
+                                        {% if value.is_subscribed %}
+                                            <button class="btn btn-primary">Current</button>
+                                        {% else %}
+                                            <button class="btn btn-default">Sign Up</button>
+                                        {% endif %}
+                                    </div>
+                                    <div class="hidden confirm-change">
+                                        <p>Change your Subscription?</p>
+                                        <button class="btn btn-default" data-target="cancel">Cancel</button>
+                                        <button class="btn btn-primary"  data-target="{{ value.product.recurly_plan_code }}">Confirm</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -25,4 +34,38 @@
             {% endfor %}
         {% endfor %}
     </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        (function () {
+            function toggle(elemsToShow, elemsToHide) {
+                elemsToHide.addClass('hidden').removeClass('show');
+                elemsToShow.addClass('show').removeClass('hidden');
+            }
+
+            $('.open-confirm-change .btn').click(function () {
+                var wrapper = $(this).parents('.button-wrapper');
+                var toBeHidden = wrapper.children('.open-confirm-change');
+                var toBeShown = wrapper.children('.confirm-change');
+
+                toggle(toBeShown, toBeHidden);
+            });
+
+            $('.confirm-change .btn').click(function () {
+                var target = $(this).data('target');
+
+                if (target === 'cancel') {
+                    var wrapper = $(this).parents('.button-wrapper');
+                    var toBeShown = wrapper.children('.open-confirm-change');
+                    var toBeHidden = wrapper.children('.confirm-change');
+
+                    toggle(toBeShown, toBeHidden);
+                } else {
+                    var url = 'https://{{ RECURLY_SUBDOMAIN }}.recurly.com/subscribe/' + target;
+                    window.location.href = url;
+                }
+            });
+        })();
+    </script>
 {% endblock %}

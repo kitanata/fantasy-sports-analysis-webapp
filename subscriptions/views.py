@@ -1,6 +1,7 @@
 from django.template.response import TemplateResponse
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+from django.conf import settings
 from django.db.models import Q
 from datetime import timedelta
 from itertools import groupby, chain
@@ -64,5 +65,6 @@ def user_subscriptions(request):
         subscriptions_by_sport.append(sport_dict)
 
     return TemplateResponse(request, 'subscriptions/user_subscriptions.html', {
+        'RECURLY_SUBDOMAIN': settings.RECURLY_SUBDOMAIN,
         'subscriptions_by_sport': subscriptions_by_sport
     })
