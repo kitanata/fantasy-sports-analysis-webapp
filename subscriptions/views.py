@@ -54,7 +54,7 @@ def user_subscriptions(request):
             'products': []
         }
 
-        for product in sport.product_set.all():
+        for product in sport.product_set.all().order_by('price'):
             subscribed = bool(product.subscribed.filter(
                 email=request.user.email).count())
             sport_dict['products'].append({
