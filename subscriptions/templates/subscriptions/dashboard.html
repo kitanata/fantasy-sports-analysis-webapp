@@ -8,7 +8,7 @@
                 <div class="col-xs-12">
                     <h1>{{ group.date|date:'l, F j, Y' }}</h1>
                     {% for lineup in group.lineups %}
-                        <a href="#" class="open-download-modal" data-target="{{ lineup.pdf }}">
+                        <a href="#" class="open-download-modal" data-target="{{ lineup.pdf.url }}">
                             {% if lineup.product.first.image %}
                                 <img src="{{ lineup.product.first.image.url }}">
                             {% else %}

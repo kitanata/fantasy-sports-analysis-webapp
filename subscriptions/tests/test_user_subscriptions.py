@@ -2,12 +2,14 @@ from django.test import TestCase, RequestFactory
 from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model
 from django.utils import timezone
+from unittest.mock import patch, MagicMock
 
 from ..models import Subscription, Product, Sport
 from ..views import user_subscriptions
 
 
 class UserSubscriptionsTest(TestCase):
+    @patch('recurly.Plan', MagicMock(name='Plan'))
     def setUp(self):
         self.factory = RequestFactory()
         user = get_user_model().objects.create_user('example@example.com')

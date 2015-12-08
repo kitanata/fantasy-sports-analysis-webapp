@@ -68,11 +68,7 @@ And we're finally done!
 
 We'll run two commands here. I keep them in two different tabs, personally.
 
-Running gulp to compile SASS into CSS, and whatever else I add to it in the future. (probably JS concatenation and minification.) This will watch for file changes and reload, but on certain classes of syntax errors you'll need to manually kick it back off.
-
-```sh
-gulp
-```
+Running gulp to compile SASS into CSS, and whatever else I add to it in the future. (probably JS concatenation and minification.) This will watch for file changes and reload, but on certain classes of syntax errors you'll need to manually kick it back off. Since installing django-gulp, this is run automatically as a part of runserver and collectstatic, so there's no need to run it manually.
 
 And Running the django debug server:
 

@@ -31,6 +31,10 @@ class SubscriptionAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
+    prepopulated_fields = {
+        'recurly_plan_code': ('sport', 'name',)
+    }
+
     list_display = (
         'name',
         'sport',

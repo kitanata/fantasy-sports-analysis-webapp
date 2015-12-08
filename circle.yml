@@ -1,7 +1,11 @@
 machine:
+  python:
+    version: 3.5.0
   environment:
     SECRET_KEY: circleci
     DATABASE_URL: postgresql://localhost/ackarma
+    RECURLY_API_KEY: none
+    RECURLY_SUBDOMAIN: none
 deployment:
   staging:
     branch: master
