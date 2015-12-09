@@ -157,13 +157,54 @@ class LineUp(models.Model):
 
 
 class Subscription(models.Model):
+    ACTIVE = 'active'
+    CANCELED = 'canceled'
+    FUTURE = 'future'
+    EXPIRED = 'expired'
+
+    STATE_CHOICES = (
+        (ACTIVE, 'active',),
+        (CANCELED, 'canceled',),
+        (FUTURE, 'future',),
+        (EXPIRED, 'expired',),
+    )
+
+    # Relations we use locally.
     product = models.ForeignKey(Product)
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    date_subscribed = models.DateTimeField(
+
+    # Recurly Mirrored Fields:
+    state = models.CharField(
+        max_length=64,
+        choices=STATE_CHOICES
+    )
+
+    # We're not using UUIDField here because we're populating directly
+    # from Recurly.
+    uuid = models.CharField(
+        max_length=128,
+        db_index=True
+    )
+
+    activated_at = models.DateTimeField(
         default=timezone.now,
         verbose_name='Date Subscribed',
         help_text='Records the date this subscription became active.'
     )
 
+    canceled_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name='Date Cancelled',
+        help_text='Records the date this subscription was cancelled.'
+    )
+
+    expired_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name='Date Expired',
+        help_text='Records the date this subscription expired, or will expire.'
+    )
+
     def __str__(self):
-        return '%s subscribed to %s' % (self.user.email, self.product.name,)
+        return '{} subscribed to {}'.format(self.user.email, self.product.name)

@@ -25,7 +25,10 @@ class SubscriptionAdmin(admin.ModelAdmin):
         '__str__',
         'user',
         'product',
-        'date_subscribed',
+        'state',
+        'activated_at',
+        'canceled_at',
+        'expired_at',
     )
 
 
