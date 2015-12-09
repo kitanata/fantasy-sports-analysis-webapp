@@ -2,6 +2,9 @@
 
 from django.dispatch import Signal
 
+# For convienience, I'm defining all the notifications recurly can send.
+# Not all of these will be used, but the routing is tested.
+
 # Accounts
 new_account_notification = Signal(providing_args=('data',))
 canceled_account_notification = Signal(providing_args=('data',))
