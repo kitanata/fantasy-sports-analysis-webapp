@@ -1,12 +1,17 @@
+import recurly
+
 from django.template.response import TemplateResponse
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, HttpResponseBadRequest
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from django.utils import timezone
 from django.conf import settings
 from django.db.models import Q
 from datetime import timedelta
 from itertools import groupby, chain
-
 from .models import LineUp, Subscription, Sport, Product
+from . import signals
 
 
 @login_required
@@ -68,3 +73,19 @@ def user_subscriptions(request):
         'RECURLY_SUBDOMAIN': settings.RECURLY_SUBDOMAIN,
         'subscriptions_by_sport': subscriptions_by_sport
     })
+
+
+@csrf_exempt
+@require_POST
+def push_notifications(request):
+    raw_data = request.body
+    data = recurly.objects_for_push_notification(raw_data)
+
+    try:
+        signal = getattr(signals, data['type'])
+    except AttributeError:
+        return HttpResponseBadRequest("Invalid notification name.")
+
+    signal.send(sender=request, data=data)
+
+    return HttpResponse()
