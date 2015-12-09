@@ -6,11 +6,6 @@ from django.core.urlresolvers import reverse
 from .. import signals
 from ..views import push_notifications
 
-# # Invoices
-# new_invoice_notification = Signal(providing_args=('data',))
-# closed_invoice_notification = Signal(providing_args=('data',))
-# past_due_invoice_notification = Signal(providing_args=('data',))
-
 
 def generate_minimal_xml(notification_name):
     """
