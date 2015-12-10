@@ -1,8 +1,22 @@
 from django.conf.urls import url
 
-from .views import dashboard, user_subscriptions
+from . import views
+from . import receivers
 
 urlpatterns = [
-    url(r'^dashboard/', dashboard, name='dashboard'),
-    url(r'^subscriptions/', user_subscriptions, name='user_subscriptions')
+    url(
+        r'^dashboard/',
+        views.dashboard,
+        name='dashboard'
+    ),
+    url(
+        r'^subscriptions/',
+        views.user_subscriptions,
+        name='user_subscriptions'
+    ),
+    url(
+        r'^push_notifications/',
+        views.push_notifications,
+        name='push_notifications'
+    )
 ]

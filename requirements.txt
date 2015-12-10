@@ -9,6 +9,8 @@ django-grappelli==2.7.2
 django-gulp==2.1.1
 django-nose==1.4.2
 env-tools==2.0.0
+factory-boy==2.6.0
+fake-factory==0.5.3
 futures==2.2.0
 gunicorn==19.4.1
 iso8601==0.1.11
