@@ -21,6 +21,7 @@ Sub = namedtuple('Sub', [
 
 
 class TestNewSubscriptionHandler(TestCase):
+    @patch('recurly.Plan', MagicMock(name='Plan'))
     def setUp(self):
         self.now = timezone.now()
         self.product = ProductFactory()
