@@ -1,10 +1,10 @@
 from django.dispatch import receiver
 
-from .signals import new_subscription_notification
+from . import signals
 from .models import Subscription, Product
 
 
-@receiver(new_subscription_notification)
+@receiver(signals.new_subscription_notification)
 def new_subscription_handler(sender, **kwargs):
     """
     Handle the new subscription event from Recurly by creating a new
@@ -24,3 +24,8 @@ def new_subscription_handler(sender, **kwargs):
         canceled_at=sub.canceled_at,
         expired_at=sub.expires_at
     )
+
+
+@receiver(signals.updated_subscription_notification)
+def update_subscription_handler(sender, **kwargs):
+    pass
