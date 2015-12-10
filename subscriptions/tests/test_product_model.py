@@ -2,20 +2,14 @@ from django.test import TestCase
 from decimal import Decimal
 from unittest.mock import patch, MagicMock
 
-from ..models import Product, Sport
+from ..factories import ProductFactory
+from ..models import Product
 
 
 class TestProduct(TestCase):
     @patch('recurly.Plan', MagicMock(name='Plan'))
     def setUp(self):
-        self.sport = Sport.objects.create(name='Football')
-        self.product = Product.objects.create(
-            name='Test Plan',
-            recurly_plan_code='test-plan',
-            duration=Product.MONTHLY,
-            sport=self.sport,
-            price=Decimal('40.00')
-        )
+        self.product = ProductFactory(duration=Product.MONTHLY)
 
     def test_product_is_daily_method(self):
         self.assertFalse(self.product.is_daily())

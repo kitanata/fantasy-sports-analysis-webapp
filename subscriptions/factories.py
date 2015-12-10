@@ -1,5 +1,6 @@
 import factory
 import factory.django
+import factory.fuzzy
 from django.utils import timezone
 from django.utils.text import slugify
 from accounts.factories import EmailUserFactory
@@ -23,7 +24,7 @@ class ProductFactory(factory.django.DjangoModelFactory):
     )
     duration = factory.Iterator([models.Product.DAILY, models.Product.MONTHLY])
     sport = factory.SubFactory(SportFactory)
-    price = factory.FuzzyDecimal(200)
+    price = factory.fuzzy.FuzzyDecimal(200)
 
 
 class LineUpFactory(factory.django.DjangoModelFactory):
