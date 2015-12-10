@@ -32,7 +32,7 @@ class LineUpFactory(factory.django.DjangoModelFactory):
         model = models.LineUp
 
     pdf = factory.django.FileField(filename='somepdf.pdf')
-    date_uploaded = timezone.now()
+    date_uploaded = factory.LazyAttribute(lambda obj: timezone.now())
 
     @factory.post_generation
     def products(self, create, extracted, **kwargs):
@@ -54,7 +54,7 @@ class SubscriptionFactory(factory.django.DjangoModelFactory):
     user = factory.SubFactory(EmailUserFactory)
     uuid = factory.Sequence(lambda n: n)
     state = models.Subscription.ACTIVE
-    activated_at = timezone.now()
+    activated_at = factory.LazyAttribute(lambda obj: timezone.now())
 
 
 class UserWithSubscriptionFactory(EmailUserFactory):

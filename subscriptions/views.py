@@ -21,7 +21,8 @@ def dashboard(request):
 
     # Subscriptions a user has.
     subscriptions = request.user.subscription_set.all().select_related(
-        'product')
+        'product'
+    )
 
     lineups = []
 
@@ -37,7 +38,10 @@ def dashboard(request):
 
     # and her we group the lineups returned by the date they were uploaded,
     # so that we can format the output easily
-    for date, group in groupby(all_lineups, key=lambda x: x.date_uploaded):
+    for date, group in groupby(
+        all_lineups,
+        key=lambda x: x.date_uploaded.date()
+    ):
         lineups_by_date.append({
             'date': date,
             'lineups': list(group)

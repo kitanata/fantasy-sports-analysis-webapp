@@ -28,8 +28,8 @@ class SubscriptionsDashboardTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_context_is_populated_with_lineups(self):
+        today = timezone.now()
         lineup = LineUpFactory(products=[self.product])
-
         response = dashboard(self.request)
         data = response.context_data['lineups_by_date']
 
@@ -43,7 +43,10 @@ class SubscriptionsDashboardTest(TestCase):
         # }]
 
         self.assertEqual(len(data), 1)
-        self.assertEqual(data[0]['date'], today)
+        # We're calling .date() here because we want to group by
+        # M/D/Y, not M/D/Y:HH:MM:SS. The latter causes some weird things
+        # to happen on the dashboard.
+        self.assertEqual(data[0]['date'], today.date())
         self.assertEqual(len(data[0]['lineups']), 1)
         self.assertEqual(data[0]['lineups'][0], lineup)
 
@@ -71,6 +74,6 @@ class SubscriptionsDashboardTest(TestCase):
         data = response.context_data['lineups_by_date']
 
         self.assertEqual(len(data), 1)
-        self.assertEqual(data[0]['date'], today)
+        self.assertEqual(data[0]['date'], today.date())
         self.assertEqual(len(data[0]['lineups']), 1)
         self.assertEqual(data[0]['lineups'][0], lineup)
