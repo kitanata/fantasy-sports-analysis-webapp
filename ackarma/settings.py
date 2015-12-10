@@ -26,7 +26,6 @@ ALLOWED_HOSTS = ['*']
 AUTH_USER_MODEL = 'accounts.EmailUser'
 
 INSTALLED_APPS = (
-    'django_gulp',
     'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -35,6 +34,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'django_gulp',
+    'django_nose',
     'debug_toolbar',
     'crispy_forms',
 
@@ -85,6 +86,8 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
+
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 LOGIN_URL = '/login'
 LOGIN_REDIRECT_URL = '/dashboard'
