@@ -29,7 +29,7 @@ def dashboard(request):
     for subscription in subscriptions:
         lineups.append(LineUp.objects.filter(
             Q(date_uploaded__gte=two_weeks_ago) &
-            Q(date_uploaded__gte=subscription.date_subscribed),
+            Q(date_uploaded__gte=subscription.activated_at),
             products__in=[subscription.product]
         ).order_by('-date_uploaded'))
 
