@@ -24,7 +24,7 @@ Sub = namedtuple('Sub', [
 class TestUpdateSubscriptionHandler(TestCase):
     @patch('recurly.Plan', MagicMock(name='Plan'))
     def setUp(self):
-        self.subscription = SubscriptionFactory()
+        self.subscription = SubscriptionFactory(uuid='TEST')
         self.sender = Sender(user=self.subscription.user)
         self.plan = Plan(plan_code=self.subscription.product.recurly_plan_code)
 
@@ -43,11 +43,15 @@ class TestUpdateSubscriptionHandler(TestCase):
         )
 
         self.assertEqual(self.subscription.canceled_at, None)
-        self.assertNotEqual(self.subscription.uuid, 'TEST')
+        self.assertEqual(self.subscription.state, Subscription.ACTIVE)
 
         update_subscription_handler(self.sender, data={
             'subscription': sub
         })
 
-        self.assertEqual(self.subscription.canceled_at, canceled_at)
-        self.assertEqual(self.subscription.uuid, 'TEST')
+        updated_subscription = Subscription.objects.get(
+            pk=self.subscription.pk
+        )
+
+        self.assertEqual(updated_subscription.canceled_at, canceled_at)
+        self.assertEqual(updated_subscription.state, Subscription.CANCELED)
