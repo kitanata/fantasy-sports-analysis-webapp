@@ -122,6 +122,8 @@ class Product(models.Model):
 
         # Apply the selected duration (interval length defaults to 1)
         plan.interval_unit = self.duration
+        plan.success_url = settings.RECURLY_SUCCESS_URL
+        plan.cancel_url = settings.RECURLY_CANCEL_URL
 
         # Save the model and plan in recurly.
         plan.save()
