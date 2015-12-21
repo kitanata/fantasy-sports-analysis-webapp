@@ -1,4 +1,6 @@
 [run]
 omit =
+  */.virtualenvs/*
+  *test*
   subscriptions/migrations/*
   accounts/migrations/*
