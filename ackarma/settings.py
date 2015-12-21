@@ -27,6 +27,8 @@ AUTH_USER_MODEL = 'accounts.EmailUser'
 
 INSTALLED_APPS = (
     'grappelli',
+    'django_gulp',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -34,7 +36,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'django_gulp',
     'django_nose',
     'debug_toolbar',
     'crispy_forms',
