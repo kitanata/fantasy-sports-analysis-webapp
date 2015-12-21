@@ -10,7 +10,7 @@ from django.conf import settings
 from django.db.models import Q
 from datetime import timedelta
 from itertools import groupby, chain
-from .models import LineUp, Subscription, Sport, Product
+from .models import LineUp, Sport
 from . import signals
 
 

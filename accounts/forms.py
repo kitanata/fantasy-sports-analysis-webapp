@@ -68,7 +68,6 @@ class EmailUserCreationForm(forms.ModelForm):
         self.helper.add_input(Submit('save', 'Sign Up'))
 
 
-
 class EmailUserChangeForm(forms.ModelForm):
 
     """
@@ -120,4 +119,6 @@ class DeleteAccountForm(forms.Form):
         self.helper.form_id = 'delete-account'
         self.helper.form_method = 'post'
         self.helper.form_action = 'delete_account'
-        self.helper.add_input(Submit('save', 'I understand, delete my account.'))
+        self.helper.add_input(
+            Submit('save', 'I understand, delete my account.')
+        )
