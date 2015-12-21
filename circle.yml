@@ -6,6 +6,8 @@ machine:
     DATABASE_URL: postgresql://localhost/ackarma
     RECURLY_API_KEY: none
     RECURLY_SUBDOMAIN: none
+    RECURLY_SUCCESS_URL: none
+    RECURLY_CANCEL_URL: none
 deployment:
   staging:
     branch: master
