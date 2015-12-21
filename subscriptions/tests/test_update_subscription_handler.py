@@ -1,10 +1,8 @@
 import datetime
 from django.test import TestCase
 from unittest.mock import patch, MagicMock
-from accounts.factories import EmailUserFactory
 from collections import namedtuple
-from django.utils import timezone
-from ..factories import ProductFactory, SubscriptionFactory
+from ..factories import SubscriptionFactory
 from ..models import Subscription
 from ..receivers import update_subscription_handler
 

@@ -1,12 +1,11 @@
 import datetime
 from django.test import TestCase, RequestFactory
 from django.core.urlresolvers import reverse
-from django.contrib.auth import get_user_model
 from django.utils import timezone
 from unittest.mock import patch, MagicMock
 from accounts.factories import EmailUserFactory
 from ..factories import ProductFactory, SubscriptionFactory, LineUpFactory
-from ..models import LineUp, Subscription, Product
+from ..models import Product
 from ..views import dashboard
 
 
