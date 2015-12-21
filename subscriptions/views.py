@@ -7,15 +7,28 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.utils import timezone
 from django.conf import settings
+from django.shortcuts import redirect
 from django.db.models import Q
+from django.core.urlresolvers import reverse
+from django.contrib import messages
 from datetime import timedelta
 from itertools import groupby, chain
-from .models import LineUp, Sport
+from .models import LineUp, Sport, Product
 from . import signals
 
 
 @login_required
 def dashboard(request):
+    if request.GET.get('success') == 'true':
+        product = Product.objects.get(recurly_plan_code=request.GET['plan'])
+        messages.success(
+            request,
+            ('Thanks for subscribing to the {} plan. Your lineups will appear '
+             'automatically on this page, and you\'ll also receive email '
+             'notifications.').format(product.name)
+        )
+        return redirect(reverse('dashboard'))
+
     lineups_by_date = []
     two_weeks_ago = timezone.now() - timedelta(days=14)
 
