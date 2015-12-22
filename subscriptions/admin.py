@@ -32,6 +32,12 @@ class SubscriptionAdmin(admin.ModelAdmin):
         'expired_at',
     )
 
+    list_filter = (
+        'user',
+        'state',
+        'product',
+    )
+
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
