@@ -13,7 +13,7 @@ from django.core.urlresolvers import reverse
 from django.contrib import messages
 from datetime import timedelta
 from itertools import groupby, chain
-from .models import LineUp, Sport, Product
+from .models import LineUp, Sport, Product, Subscription
 from . import signals
 
 
@@ -78,7 +78,9 @@ def user_subscriptions(request):
 
         for product in sport.product_set.all().order_by('price'):
             subscribed = bool(product.subscribed.filter(
-                email=request.user.email).count())
+                email=request.user.email,
+                subscription__state=Subscription.ACTIVE
+            ).count())
             sport_dict['products'].append({
                 'product': product,
                 'is_subscribed': subscribed

@@ -14,7 +14,7 @@ recurly.API_KEY = settings.RECURLY_API_KEY
 class Sport(models.Model):
     name = models.CharField(
         max_length=128,
-        help_text=('Will be used to group subscriptions together, should be'
+        help_text=('Will be used to group subscriptions together, should be '
                    'a display friendly name')
     )
 
@@ -132,10 +132,12 @@ class Product(models.Model):
 
 class LineUp(models.Model):
     pdf = models.FileField()
+
     date_uploaded = models.DateTimeField(
         verbose_name='Date Uploaded',
         default=timezone.now
     )
+
     date_email_sent = models.DateTimeField(
         blank=True,
         null=True,
@@ -143,6 +145,7 @@ class LineUp(models.Model):
         help_text=('Auto-filled. Records the last time an update email was'
                    ' sent to subscribers for this specific line up')
     )
+
     products = models.ManyToManyField(Product)
 
     def products_list(self):
@@ -151,7 +154,7 @@ class LineUp(models.Model):
     products_list.verbose_name = 'List of Products'
 
     def __str__(self):
-        return '%s' % self.pdf
+        return '#{}'.format(self.pk)
 
     class Meta:
         verbose_name = 'Line Up'
@@ -209,4 +212,4 @@ class Subscription(models.Model):
     )
 
     def __str__(self):
-        return '{} subscribed to {}'.format(self.user.email, self.product.name)
+        return '#{}'.format(self.pk)
