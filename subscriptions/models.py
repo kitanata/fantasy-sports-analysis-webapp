@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 from django.core.validators import RegexValidator
+from django.core.exceptions import ValidationError
 from decimal import Decimal
 
 import recurly
@@ -213,3 +214,25 @@ class Subscription(models.Model):
 
     def __str__(self):
         return '#{}'.format(self.pk)
+
+    def save(self, *args, **kwargs):
+        """When we save a subscription, we need to inspect the state of the db,
+        since subscriptions should adhere to the following rules: One
+        subscription per user, per sport, active at a time. In case the state
+        of the db violates that constraint, we need to resolve the state, and
+        persist to recurly, verifying then that both recurly and the db
+        are both canonical.
+        """
+        sport = self.product.sport
+        products = sport.product_set.all()
+
+        subscriptions = Subscription.objects.filter(
+            user=self.user,
+            product__in=products
+        )
+
+        if subscriptions.count() > 1:
+            super(Subscription, self).save(*args, **kwargs)
+        else:
+            print(subscriptions.count())
+
