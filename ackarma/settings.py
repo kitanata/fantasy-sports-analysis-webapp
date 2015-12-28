@@ -90,6 +90,11 @@ USE_TZ = True
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-package=.',
+]
+
 LOGIN_URL = '/login'
 LOGIN_REDIRECT_URL = '/dashboard'
 

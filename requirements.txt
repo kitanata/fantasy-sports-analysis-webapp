@@ -1,6 +1,7 @@
 ansicolors==1.0.2
 backports.ssl-match-hostname==3.4.0.2
 configparser==3.5.0b2
+coverage==4.0.3
 Django==1.8.7
 django-crispy-forms==1.5.2
 django-debug-toolbar==1.4
