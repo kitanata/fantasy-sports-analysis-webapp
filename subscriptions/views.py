@@ -8,6 +8,7 @@ from django.views.decorators.http import require_POST
 from django.utils import timezone
 from django.conf import settings
 from django.db.models import Q
+from django.contrib import messages
 from datetime import timedelta
 from itertools import groupby, chain
 from .models import LineUp, Sport
@@ -83,10 +84,33 @@ def user_subscriptions(request):
 @login_required
 def billing_information(request):
     email = request.user.email
+
     try:
         billing_info = recurly.Account.get(email).billing_info
     except recurly.errors.NotFoundError:
         billing_info = None
+
+    if request.method == 'POST':
+        form = BillingInfoForm(request.POST)
+        if form.is_valid():
+            form.clean()
+            token = form.cleaned_data['token']
+            if billing_info is None:
+                account = recurly.Account(account_code=email)
+                account.first_name = request.user.first_name
+                account.last_name = request.user.last_name
+                account.email = email
+                account.save()
+                account.billing_info.token_id = token
+                account.billing_info.save()
+            else:
+                billing_info.token_id = token
+                billing_info.save()
+
+            messages.success(
+                request,
+                'Successfully updated your billing information.'
+            )
 
     form = BillingInfoForm(initial={
         'first_name': billing_info.first_name,
@@ -98,7 +122,9 @@ def billing_information(request):
         'address2': billing_info.address2,
         'city': billing_info.city,
         'state': billing_info.state,
-        'country': billing_info.country
+        'country': billing_info.country,
+        'verification_code': '',
+        'postal_code': ''
     })
 
     return TemplateResponse(
