@@ -1,6 +1,7 @@
 [run]
 omit =
+  manage.py
   */.virtualenvs/*
   *test*
-  subscriptions/migrations/*
-  accounts/migrations/*
+  *factories*
+  *migrations/*
