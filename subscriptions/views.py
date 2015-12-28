@@ -11,6 +11,7 @@ from django.db.models import Q
 from datetime import timedelta
 from itertools import groupby, chain
 from .models import LineUp, Sport
+from .forms import BillingInfoForm
 from . import signals
 
 
@@ -77,6 +78,36 @@ def user_subscriptions(request):
         'RECURLY_SUBDOMAIN': settings.RECURLY_SUBDOMAIN,
         'subscriptions_by_sport': subscriptions_by_sport
     })
+
+
+@login_required
+def billing_information(request):
+    email = request.user.email
+    try:
+        billing_info = recurly.Account.get(email).billing_info
+    except recurly.errors.NotFoundError:
+        billing_info = None
+
+    form = BillingInfoForm(initial={
+        'first_name': billing_info.first_name,
+        'last_name': billing_info.last_name,
+        'number': 'xxxx xxxx xxxx {}'.format(billing_info.last_four),
+        'month': billing_info.month,
+        'year': billing_info.year,
+        'address1': billing_info.address1,
+        'address2': billing_info.address2,
+        'city': billing_info.city,
+        'state': billing_info.state,
+        'country': billing_info.country
+    })
+
+    return TemplateResponse(
+        request,
+        'subscriptions/billing_information.html',
+        {
+            'form': form
+        }
+    )
 
 
 @csrf_exempt
