@@ -86,8 +86,13 @@ def billing_information(request):
     email = request.user.email
 
     try:
-        billing_info = recurly.Account.get(email).billing_info
+        account = recurly.Account.get(email)
     except recurly.errors.NotFoundError:
+        account = None
+
+    try:
+        billing_info = account.billing_info
+    except AttributeError:
         billing_info = None
 
     if request.method == 'POST':
@@ -95,37 +100,44 @@ def billing_information(request):
         if form.is_valid():
             form.clean()
             token = form.cleaned_data['token']
-            if billing_info is None:
+
+            if account is None:
                 account = recurly.Account(account_code=email)
                 account.first_name = request.user.first_name
                 account.last_name = request.user.last_name
                 account.email = email
                 account.save()
-                account.billing_info.token_id = token
-                account.billing_info.save()
-            else:
-                billing_info.token_id = token
-                billing_info.save()
+
+            if billing_info is None:
+                account.billing_info = recurly.BillingInfo()
+                billing_info = account.billing_info
+
+            billing_info.token_id = token
+            account.update_billing_info(billing_info)
 
             messages.success(
                 request,
                 'Successfully updated your billing information.'
             )
 
-    form = BillingInfoForm(initial={
-        'first_name': billing_info.first_name,
-        'last_name': billing_info.last_name,
-        'number': 'xxxx xxxx xxxx {}'.format(billing_info.last_four),
-        'month': billing_info.month,
-        'year': billing_info.year,
-        'address1': billing_info.address1,
-        'address2': billing_info.address2,
-        'city': billing_info.city,
-        'state': billing_info.state,
-        'country': billing_info.country,
-        'verification_code': '',
-        'postal_code': ''
-    })
+    if billing_info is not None:
+        form = BillingInfoForm(initial={
+            'first_name': billing_info.first_name,
+            'last_name': billing_info.last_name,
+            'number': 'xxxx xxxx xxxx {}'.format(billing_info.last_four),
+            'month': billing_info.month,
+            'year': billing_info.year,
+            'address1': billing_info.address1,
+            'address2': billing_info.address2,
+            'city': billing_info.city,
+            'state': billing_info.state,
+            'country': billing_info.country
+        })
+    else:
+        form = BillingInfoForm(initial={
+            'first_name': request.user.first_name,
+            'last_name': request.user.last_name
+        })
 
     return TemplateResponse(
         request,
