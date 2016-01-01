@@ -87,12 +87,15 @@ def billing_information(request):
 
     try:
         account = recurly.Account.get(email)
+        # Previously un-nested, unnecessary to try and call .billing_info
+        # on what is obviously None
+        try:
+            billing_info = account.billing_info
+        except AttributeError:
+            billing_info = None
+
     except recurly.errors.NotFoundError:
         account = None
-
-    try:
-        billing_info = account.billing_info
-    except AttributeError:
         billing_info = None
 
     if request.method == 'POST':
@@ -121,17 +124,21 @@ def billing_information(request):
             )
 
     if billing_info is not None:
+        billing = billing_info.__dict__
+
         form = BillingInfoForm(initial={
-            'first_name': billing_info.first_name,
-            'last_name': billing_info.last_name,
-            'number': 'xxxx xxxx xxxx {}'.format(billing_info.last_four),
-            'month': billing_info.month,
-            'year': billing_info.year,
-            'address1': billing_info.address1,
-            'address2': billing_info.address2,
-            'city': billing_info.city,
-            'state': billing_info.state,
-            'country': billing_info.country
+            'first_name': billing.get('first_name', ''),
+            'last_name': billing.get('last_name', ''),
+            'number': 'xxxx xxxx xxxx {}'.format(
+                billing.get('last_four', 'xxxx')
+            ),
+            'month': billing.get('month', ''),
+            'year': billing.get('year', ''),
+            'address1': billing.get('address1', ''),
+            'address2': billing.get('address2', ''),
+            'city': billing.get('city', ''),
+            'state': billing.get('state', ''),
+            'country': billing.get('country', '')
         })
     else:
         form = BillingInfoForm(initial={
