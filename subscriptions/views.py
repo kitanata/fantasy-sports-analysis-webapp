@@ -94,6 +94,11 @@ def user_subscriptions(request):
     })
 
 
+@login_required
+def upgrade_subscription(request):
+    pass
+
+
 @csrf_exempt
 @require_POST
 def push_notifications(request):
