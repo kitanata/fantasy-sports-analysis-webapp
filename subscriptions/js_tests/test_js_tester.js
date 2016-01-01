@@ -4,6 +4,6 @@ describe('a simple test', function () {
     });
 
     it('should pass now', function () {
-        expect(true).toBe(false);
+        expect(true).toBe(true);
     });
 });
