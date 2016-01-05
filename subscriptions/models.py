@@ -1,11 +1,9 @@
+import recurly
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
 from django.core.validators import RegexValidator
-from django.core.exceptions import ValidationError
 from decimal import Decimal
-
-import recurly
 
 
 recurly.SUBDOMAIN = settings.RECURLY_SUBDOMAIN
