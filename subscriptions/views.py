@@ -14,7 +14,7 @@ from django.contrib import messages
 from datetime import timedelta
 from itertools import groupby, chain
 
-from .models import LineUp, Sport
+from .models import LineUp, Sport, Subscription, Product
 from .forms import BillingInfoForm
 from . import signals
 
