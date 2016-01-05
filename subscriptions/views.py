@@ -156,6 +156,17 @@ def upgrade_subscription(request, plan_code):
                     )
                 )
 
+            return redirect(reverse('dashboard'))
+
+        else:
+            # Temporary, obviously
+            messages.info(
+                request,
+                ('Please fill out billing information before trying to ',
+                 'subscribe to a product.')
+            )
+            return redirect(reverse('billing_information'))
+
 
 @login_required
 def billing_information(request):
