@@ -17,6 +17,15 @@
                         </a>
                     {% endfor %}
                 </div>
+            {% empty %}
+                <div class="col-xs-12">
+                    <h3>There are currently no lineups for you to view.</h3>
+                    {% if user.subscription_set %}
+                        <p>You have subscriptions, and will see your lineups on this page as they become available.</p>
+                    {% else %}
+                        <p>You are not currently subscribed to receive lineups. <a href="{% url 'user_subscriptions' %}">Subscribe now!</a></p>
+                    {% endif %}
+                </div>
             {% endfor %}
         </div>
     </div>
