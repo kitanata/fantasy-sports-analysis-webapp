@@ -2,7 +2,7 @@ flake8:
     command: flake8 . --exclude=node_modules,migrations
     watch_glob: '**/*.py'
 django:
-    command: python manage.py test
+    command: python manage.py test --noinput
     watch_glob: '**/*.py'
 javascript:
     command: ./node_modules/karma/bin/karma start karma.conf.js
