@@ -1,3 +1,6 @@
+flake8:
+    command: flake8 . --exclude=node_modules,migrations
+    watch_glob: '**/*.py'
 django:
     command: python manage.py test
     watch_glob: '**/*.py'
