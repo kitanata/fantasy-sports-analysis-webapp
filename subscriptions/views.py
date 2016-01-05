@@ -122,10 +122,10 @@ def upgrade_subscription(request, plan_code):
             billing_info = None
 
         if billing_info is not None:
-            product = Product.objects.find_or_fail(recurly_plan_code=plan_code)
+            product = Product.objects.get(recurly_plan_code=plan_code)
             sport = product.sport
             subscription = Subscription.objects.filter(
-                sport=sport,
+                product__sport=sport,
                 user=request.user
             ).first()
 
@@ -153,7 +153,6 @@ def upgrade_subscription(request, plan_code):
                     subscription.uuid
                 )
                 recurly_subscription.plan_code = plan_code
-                recurly_subscription.currency = 'USD'
                 recurly_subscription.timeframe = 'now'
                 recurly_subscription.save()
 
@@ -162,7 +161,7 @@ def upgrade_subscription(request, plan_code):
                 subscription.state = recurly_subscription.state
                 subscription.activated_at = recurly_subscription.activated_at
 
-                subsription.save()
+                subscription.save()
 
                 messages.success(
                     request,
