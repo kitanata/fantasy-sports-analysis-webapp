@@ -140,6 +140,14 @@ def upgrade_subscription(request, plan_code):
                     request,
                     'Thank you for subscribing to {}!'.format(product.name)
                 )
+
+                Subscription.objects.create(
+                    product=product,
+                    user=request.user,
+                    uuid=recurly_subscription.uuid,
+                    state=recurly_subscription.state,
+                    activated_at=recurly_subscription.activated_at
+                )
             else:
                 recurly_subscription = recurly.Subscription.get(
                     subscription.uuid
@@ -148,6 +156,13 @@ def upgrade_subscription(request, plan_code):
                 recurly_subscription.currency = 'USD'
                 recurly_subscription.timeframe = 'now'
                 recurly_subscription.save()
+
+                subscription.product = product
+                subscription.uuid = recurly_subscription.uuid
+                subscription.state = recurly_subscription.state
+                subscription.activated_at = recurly_subscription.activated_at
+
+                subsription.save()
 
                 messages.success(
                     request,

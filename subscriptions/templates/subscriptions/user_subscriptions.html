@@ -23,8 +23,15 @@
                                     </div>
                                     <div class="hidden confirm-change">
                                         <p>Change your Subscription?</p>
-                                        <button class="btn btn-default" data-target="cancel">Cancel</button>
-                                        <button class="btn btn-primary" data-target="{{ value.product.recurly_plan_code }}">Confirm</button>
+                                        <form action="{% url 'upgrade_subscription' plan_code=value.product.recurly_plan_code %}" method="GET">
+                                            <button class="btn btn-default" data-target="cancel">Cancel</button>
+                                            <input
+                                                class="btn btn-primary"
+                                                value="Confirm"
+                                                name="confirm"
+                                                type="submit"
+                                                id="{{ value.product.recurly_plan_code }}-confirm">
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -65,9 +72,6 @@
                     var toBeHidden = wrapper.children('.confirm-change');
 
                     toggle(toBeShown, toBeHidden);
-                } else {
-                    var url = 'https://{{ RECURLY_SUBDOMAIN }}.recurly.com/subscribe/' + target;
-                    window.location.href = url;
                 }
             });
         })();
