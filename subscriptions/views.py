@@ -8,9 +8,11 @@ from django.views.decorators.http import require_POST
 from django.utils import timezone
 from django.conf import settings
 from django.db.models import Q
+from django.contrib import messages
 from datetime import timedelta
 from itertools import groupby, chain
-from .models import LineUp, Subscription, Sport, Product
+from .models import LineUp, Sport
+from .forms import BillingInfoForm
 from . import signals
 
 
@@ -77,6 +79,80 @@ def user_subscriptions(request):
         'RECURLY_SUBDOMAIN': settings.RECURLY_SUBDOMAIN,
         'subscriptions_by_sport': subscriptions_by_sport
     })
+
+
+@login_required
+def billing_information(request):
+    email = request.user.email
+
+    try:
+        account = recurly.Account.get(email)
+        # Previously un-nested, unnecessary to try and call .billing_info
+        # on what is obviously None
+        try:
+            billing_info = account.billing_info
+        except AttributeError:
+            billing_info = None
+
+    except recurly.errors.NotFoundError:
+        account = None
+        billing_info = None
+
+    if request.method == 'POST':
+        form = BillingInfoForm(request.POST)
+        if form.is_valid():
+            form.clean()
+            token = form.cleaned_data['token']
+
+            if account is None:
+                account = recurly.Account(account_code=email)
+                account.first_name = request.user.first_name
+                account.last_name = request.user.last_name
+                account.email = email
+                account.save()
+
+            if billing_info is None:
+                account.billing_info = recurly.BillingInfo()
+                billing_info = account.billing_info
+
+            billing_info.token_id = token
+            account.update_billing_info(billing_info)
+
+            messages.success(
+                request,
+                'Successfully updated your billing information.'
+            )
+
+    if billing_info is not None:
+        billing = billing_info.__dict__
+
+        form = BillingInfoForm(initial={
+            'first_name': billing.get('first_name', ''),
+            'last_name': billing.get('last_name', ''),
+            'number': 'xxxx xxxx xxxx {}'.format(
+                billing.get('last_four', 'xxxx')
+            ),
+            'month': billing.get('month', ''),
+            'year': billing.get('year', ''),
+            'address1': billing.get('address1', ''),
+            'address2': billing.get('address2', ''),
+            'city': billing.get('city', ''),
+            'state': billing.get('state', ''),
+            'country': billing.get('country', '')
+        })
+    else:
+        form = BillingInfoForm(initial={
+            'first_name': request.user.first_name,
+            'last_name': request.user.last_name
+        })
+
+    return TemplateResponse(
+        request,
+        'subscriptions/billing_information.html',
+        {
+            'form': form
+        }
+    )
 
 
 @csrf_exempt

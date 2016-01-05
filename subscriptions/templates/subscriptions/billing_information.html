@@ -1,0 +1,70 @@
+{% extends "accounts/base_accounts.html" %}
+{% load staticfiles %}
+{% csrf_token %}
+
+{% block child_content %}
+    <h3>Billing Information</h3>
+    <form action="{% url 'billing_information' %}" method='POST' id='billing-information' name='billing-information'>
+        {% csrf_token %}
+        {% for field in form %}
+            {% if field.html_name != 'token' %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}" class="control-label">{{ field.label }}</label>
+                    <div class="controls">
+                        <input
+                            type="text"
+                            id="{{ field.id_for_label }}"
+                            class="textinput textInput form-control"
+                            value="{% if field.value %}{{ field.value }}{% endif %}"
+                            data-recurly="{{ field.html_name }}">
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+        <div class="form-group">
+            <div class="controls">
+                <input
+                    type="hidden"
+                    id="{{ form.token.id_for_label }}"
+                    class="textinput textInput form-control"
+                    value="{% if form.token.value %}{{ form.token.value }}{% endif %}"
+                    data-recurly="{{ form.token.html_name }}"
+                    name="{{ form.token.html_name }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="controls">
+                <input
+                    type="submit"
+                    id="save"
+                    value="Save Billing Information"
+                    class="btn btn-primary"
+                    name="save">
+            </div>
+        </div>
+    </form>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        (function () {
+            $('form').on('submit', function (event) {
+                var form = this;
+                var form_elm = $('form');
+                var token = $('#id_token').val();
+
+                if (!token) {
+                    event.preventDefault();
+                    recurly.token(form, function (err, token) {
+                        if (err) {
+                            // handle error using err.code and err.fields
+                            console.table(err);
+                        } else {
+                            form_elm.submit();
+                        }
+                    });
+                }
+            });
+        })();
+    </script>
+{% endblock %}

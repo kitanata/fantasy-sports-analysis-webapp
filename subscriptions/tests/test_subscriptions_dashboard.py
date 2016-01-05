@@ -1,12 +1,11 @@
 import datetime
 from django.test import TestCase, RequestFactory
 from django.core.urlresolvers import reverse
-from django.contrib.auth import get_user_model
 from django.utils import timezone
 from unittest.mock import patch, MagicMock
 from accounts.factories import EmailUserFactory
 from ..factories import ProductFactory, SubscriptionFactory, LineUpFactory
-from ..models import LineUp, Subscription, Product
+from ..models import Product
 from ..views import dashboard
 
 
@@ -53,7 +52,7 @@ class SubscriptionsDashboardTest(TestCase):
     def test_lineups_only_appear_if_user_subscribed_prior_to_upload(self):
         today = timezone.now()
         three_days_ago = today - datetime.timedelta(days=3)
-        lineup = LineUpFactory(
+        LineUpFactory(
             products=[self.product],
             date_uploaded=three_days_ago
         )
@@ -65,7 +64,7 @@ class SubscriptionsDashboardTest(TestCase):
         today = timezone.now()
         old = today - datetime.timedelta(days=15)
         lineup = LineUpFactory(products=[self.product])
-        old_lineup = LineUpFactory(
+        LineUpFactory(
             products=[self.product],
             date_uploaded=old
         )
