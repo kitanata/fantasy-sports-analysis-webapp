@@ -5,3 +5,4 @@ RECURLY_API_KEY=asdf12134
 RECURLY_SUBDOMAIN=ackarma
 RECURLY_SUCCESS_URL=http://localhost:8000/dashboard/?success=true&account={{account_code}}&plan={{plan_code}}
 RECURLY_CANCEL_URL=http://localhost:8000/dashboard/?success=false
+RECURLY_PUBLIC_KEY=asdf

@@ -72,6 +72,12 @@
 
         <script src="{% static "vendor/jquery/dist/jquery.min.js" %}"></script>
         <script src="{% static "vendor/bootstrap-sass/assets/javascripts/bootstrap.min.js" %}"></script>
+        <script src="https://js.recurly.com/v3/recurly.js"></script>
+        <script>
+            (function () {
+                recurly.configure('{{ RECURLY_PUBLIC_KEY }}');
+            })();
+        </script>
         {% block extra_js %}
         {% endblock %}
     </body>

@@ -1,0 +1,6 @@
+django:
+    command: python manage.py test
+    watch_glob: '**/*.py'
+javascript:
+    command: ./node_modules/karma/bin/karma start karma.conf.js
+    watch_glob: '**/*.js'

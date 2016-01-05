@@ -17,5 +17,10 @@ urlpatterns = [
         r'^push_notifications/',
         views.push_notifications,
         name='push_notifications'
+    ),
+    url(
+        r'^billing_info/',
+        views.billing_information,
+        name='billing_information'
     )
 ]

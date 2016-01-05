@@ -71,6 +71,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'ackarma.context_processors.global_settings'
             ],
         },
     },
@@ -106,3 +107,4 @@ RECURLY_SUBDOMAIN = env('RECURLY_SUBDOMAIN')
 RECURLY_API_KEY = env('RECURLY_API_KEY')
 RECURLY_SUCCESS_URL = env('RECURLY_SUCCESS_URL')
 RECURLY_CANCEL_URL = env('RECURLY_CANCEL_URL')
+RECURLY_PUBLIC_KEY = env('RECURLY_PUBLIC_KEY')

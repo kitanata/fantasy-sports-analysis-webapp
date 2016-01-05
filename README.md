@@ -81,5 +81,11 @@ python manage.py runserver
 Just run:
 
 ```sh
-python manage.py test
+polytester
+```
+
+or to run and auto-reload:
+
+```sh
+polytester --autoreload
 ```

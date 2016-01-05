@@ -10,6 +10,14 @@
   "homepage": "https://github.com/blueshiftedtech/ac-karma-sports-ffa#readme",
   "dependencies": {
     "gulp": "^3.9.0",
-    "gulp-sass": "^2.1.0"
+    "gulp-sass": "^2.1.0",
+    "jasmine-core": "^2.4.1",
+    "karma": "^0.13.16",
+    "karma-jasmine": "^0.3.6",
+    "karma-phantomjs-launcher": "^0.2.2",
+    "phantomjs": "^1.9.19"
+  },
+  "scripts": {
+    "test": "./node_modules/karma/bin/karma start karma.conf.js"
   }
 }
