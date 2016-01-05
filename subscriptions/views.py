@@ -96,9 +96,65 @@ def user_subscriptions(request):
     })
 
 
-@login_required
-def upgrade_subscription(request):
-    pass
+def upgrade_subscription(request, plan_code):
+    if not request.user:
+        messages.info(
+            request,
+            'To process your order you will need to create an account'
+        )
+        url = reverse('signup')
+        url = url + '?next=upgrade_subscription'
+        return redirect(reverse('signup'))
+    else:
+        email = request.user.email
+
+        try:
+            account = recurly.Account.get(email)
+            # Previously un-nested, unnecessary to try and call .billing_info
+            # on what is obviously None
+            try:
+                billing_info = account.billing_info
+            except AttributeError:
+                billing_info = None
+
+        except recurly.errors.NotFoundError:
+            account = None
+            billing_info = None
+
+        if billing_info is not None:
+            product = Product.objects.find_or_fail(recurly_plan_code=plan_code)
+            sport = product.sport
+            subscription = Subscription.objects.filter(
+                sport=sport,
+                user=request.user
+            ).first()
+
+            if subscription is None:
+                recurly_subscription = recurly.Subscription()
+                recurly_subscription.plan_code = plan_code
+                recurly_subscription.currency = 'USD'
+                recurly_subscription.account = account
+                recurly_subscription.save()
+
+                messages.success(
+                    request,
+                    'Thank you for subscribing to {}!'.format(product.name)
+                )
+            else:
+                recurly_subscription = recurly.Subscription.get(
+                    subscription.uuid
+                )
+                recurly_subscription.plan_code = plan_code
+                recurly_subscription.currency = 'USD'
+                recurly_subscription.timeframe = 'now'
+                recurly_subscription.save()
+
+                messages.success(
+                    request,
+                    'Thank you for upgrading your subscription to {}!'.format(
+                        product.name
+                    )
+                )
 
 
 @login_required

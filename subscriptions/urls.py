@@ -22,5 +22,10 @@ urlpatterns = [
         r'^billing_info/',
         views.billing_information,
         name='billing_information'
-    )
+    ),
+    url(
+        r'^subscription/(?P<plan_code>[\w-]+)',
+        views.upgrade_subscription,
+        name='upgrade_subscription'
+    ),
 ]
