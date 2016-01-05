@@ -52,7 +52,7 @@ class SubscriptionsDashboardTest(TestCase):
     def test_lineups_only_appear_if_user_subscribed_prior_to_upload(self):
         today = timezone.now()
         three_days_ago = today - datetime.timedelta(days=3)
-        lineup = LineUpFactory(
+        LineUpFactory(
             products=[self.product],
             date_uploaded=three_days_ago
         )
@@ -64,7 +64,7 @@ class SubscriptionsDashboardTest(TestCase):
         today = timezone.now()
         old = today - datetime.timedelta(days=15)
         lineup = LineUpFactory(products=[self.product])
-        old_lineup = LineUpFactory(
+        LineUpFactory(
             products=[self.product],
             date_uploaded=old
         )
