@@ -121,6 +121,26 @@ def upgrade_subscription(request, plan_code):
             account = None
             billing_info = None
 
+        if request.method == 'POST':
+            form = BillingInfoForm(request.POST)
+            if form.is_valid():
+                form.clean()
+                token = form.cleaned_data['token']
+
+                if account is None:
+                    account = recurly.Account(account_code=email)
+                    account.first_name = request.user.first_name
+                    account.last_name = request.user.last_name
+                    account.email = email
+                    account.save()
+
+                if billing_info is None:
+                    account.billing_info = recurly.BillingInfo()
+                    billing_info = account.billing_info
+
+                billing_info.token_id = token
+                account.update_billing_info(billing_info)
+
         if billing_info is not None:
             product = Product.objects.get(recurly_plan_code=plan_code)
             sport = product.sport
@@ -173,13 +193,21 @@ def upgrade_subscription(request, plan_code):
             return redirect(reverse('dashboard'))
 
         else:
-            # Temporary, obviously
             messages.info(
                 request,
-                ('Please fill out billing information before trying to ',
-                 'subscribe to a product.')
+                ('Please fill out billing information to subscribe to a '
+                 'product.')
             )
-            return redirect(reverse('billing_information'))
+
+            form = BillingInfoForm(initial={
+                'first_name': request.user.first_name,
+                'last_name': request.user.last_name
+            })
+
+            return TemplateResponse(request, 'subscriptions/subscribe.html', {
+                'form': form,
+                'plan_code': plan_code
+            })
 
 
 @login_required
@@ -225,7 +253,17 @@ def billing_information(request):
             )
 
     if billing_info is not None:
-        billing = billing_info.__dict__
+        billing = dict()
+
+        # This is weird, but billing_info is not iterable, and
+        # calling __dict__ only works if I've set the values.
+        # thankfully recurly resource classes provide a tuple of the
+        # possible attributes.
+        for attribute in billing_info.attributes:
+            try:
+                billing[attribute] = getattr(billing_info, attribute)
+            except AttributeError:
+                billing[attribute] = None
 
         form = BillingInfoForm(initial={
             'first_name': billing.get('first_name', ''),
