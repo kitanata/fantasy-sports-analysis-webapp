@@ -5,10 +5,10 @@ from django.conf import settings
 from django.utils import timezone
 from django.core.validators import RegexValidator
 from decimal import Decimal
-from activecampaign.ActiveCampaign import ActiveCampaign
+from activecampaign import ActiveCampaign
 
 ac = ActiveCampaign()
-print(ac.api('list/view'))
+ac.api('list_list', params={'ids': 'all'})
 
 
 recurly.SUBDOMAIN = settings.RECURLY_SUBDOMAIN

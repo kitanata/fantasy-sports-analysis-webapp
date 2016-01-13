@@ -1,4 +1,0 @@
-from django.conf import settings
-
-ACTIVECAMPAIGN_URL = settings.ACTIVECAMPAIGN_URL
-ACTIVECAMPAIGN_API_KEY = settings.ACTIVECAMPAIGN_API_KEY
