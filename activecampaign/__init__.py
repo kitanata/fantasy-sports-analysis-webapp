@@ -30,4 +30,5 @@ class ActiveCampaign():
         f = getattr(requests, method)
         response = f(url, params=payload, data=data)
 
-        return (response.status_code, response.json())
+        # I'd return the status code, but it's always 200.
+        return response.json()

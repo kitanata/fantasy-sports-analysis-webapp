@@ -3,16 +3,15 @@ import recurly
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
+from django.utils.text import slugify
 from django.core.validators import RegexValidator
 from decimal import Decimal
 from activecampaign import ActiveCampaign
 
-ac = ActiveCampaign()
-ac.api('list_list', params={'ids': 'all'})
-
 
 recurly.SUBDOMAIN = settings.RECURLY_SUBDOMAIN
 recurly.API_KEY = settings.RECURLY_API_KEY
+ac = ActiveCampaign()
 
 
 class Sport(models.Model):
@@ -94,6 +93,12 @@ class Product(models.Model):
                    'marketing messaging related to this product.')
     )
 
+    list_id = models.IntegerField(
+        blank=True,
+        null=True,
+        help_text='ActiveCampaign mailing list ID.'
+    )
+
     def is_daily(self):
         if self.duration == self.DAILY:
             return True
@@ -119,6 +124,33 @@ class Product(models.Model):
                 plan_code=self.recurly_plan_code,
                 name=self.name
             )
+
+        # Create activecampaign list if none exists.
+        if not self.list_id:
+            list_name = '{} {}'.format(self.sport.name, self.name)
+
+            payload = {
+                'name': list_name,
+                'subscription_notify': '',
+                'unsubscription_notify': '',
+                'to_name': 'Subscriber',
+                'carboncopy': '',
+                'stringid': slugify(list_name),
+                'sender_name': 'AC Karma Sports',
+                'sender_addr1': '1234 Fake Addr.',
+                'sender_zip': '43230',
+                'sender_city': 'Columbus',
+                'sender_country': 'USA',
+                'sender_url': 'http://ackarmasports.com/',
+                'sender_reminder': ('Thanks for being a subscriber of our '
+                                    '{} plan!').format(list_name)
+            }
+
+            try:
+                json = ac.api('list_add', method='post', data=payload)
+                self.list_id = json['id']
+            except AttributeError:
+                print(e)
 
         # Convert USD price into cents.
         amount_in_cents = recurly.Money(int(self.price * self.DOLLAR_TO_CENTS))

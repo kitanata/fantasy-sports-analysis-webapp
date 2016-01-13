@@ -38,6 +38,8 @@ class ProductAdmin(admin.ModelAdmin):
         'recurly_plan_code': ('sport', 'name',)
     }
 
+    readonly_fields = ('list_id',)
+
     list_display = (
         'name',
         'sport',
