@@ -1,15 +1,20 @@
+from .Config import ACTIVECAMPAIGN_URL, ACTIVECAMPAIGN_API_KEY
+from .Connector import Connector
 
-from Config import ACTIVECAMPAIGN_URL, ACTIVECAMPAIGN_API_KEY
-from Connector import Connector
 
 class ActiveCampaign(Connector):
-
-    def __init__(self, url, api_key, api_user = '', api_pass = ''):
+    def __init__(
+        self,
+        url=ACTIVECAMPAIGN_URL,
+        api_key=ACTIVECAMPAIGN_API_KEY,
+        api_user='',
+        api_pass=''
+    ):
         self.url = url
         self.api_key = api_key
         Connector.__init__(self, url, api_key, api_user, api_pass)
 
-    def api(self, path, post_data = {}):
+    def api(self, path, post_data={}):
         # IE: "subscriber/view"
         components = path.split('/')
         component = components[0]

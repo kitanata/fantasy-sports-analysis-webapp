@@ -1,10 +1,14 @@
+import recurly
+
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
 from django.core.validators import RegexValidator
 from decimal import Decimal
+from activecampaign.ActiveCampaign import ActiveCampaign
 
-import recurly
+ac = ActiveCampaign()
+print(ac.api('list/view'))
 
 
 recurly.SUBDOMAIN = settings.RECURLY_SUBDOMAIN

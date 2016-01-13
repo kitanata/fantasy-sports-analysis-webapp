@@ -1,13 +1,20 @@
 import json
-from Config import ACTIVECAMPAIGN_URL, ACTIVECAMPAIGN_API_KEY
-import urllib2
+import urllib
+
+from .Config import ACTIVECAMPAIGN_URL, ACTIVECAMPAIGN_API_KEY
+
 
 class Connector():
-
-    def __init__(self, url, api_key, api_user = '', api_pass = ''):
+    def __init__(
+        self,
+        url=ACTIVECAMPAIGN_URL,
+        api_key=ACTIVECAMPAIGN_API_KEY,
+        api_user='',
+        api_pass=''
+    ):
         self.output = 'json'
         self.base = ''
-        
+
         if url != 'https://www.activecampaign.com':
             # not set reseller
             self.base = '/admin'
@@ -27,5 +34,5 @@ class Connector():
         return jdata['result_code'] == 1
 
 if __name__ == '__main__':
-    c = Connector(ACTIVECAMPAIGN_URL,  ACTIVECAMPAIGN_API_KEY)
-    print c.credentials_test()
+    c = Connector()
+    print(c.credentials_test())
