@@ -4,3 +4,5 @@ DATABASE_URL=postgresql://localhost/ackarma
 RECURLY_API_KEY=asdf12134
 RECURLY_SUBDOMAIN=ackarma
 RECURLY_PUBLIC_KEY=asdf
+ACTIVECAMPAIGN_API_KEY=asdfasdf
+ACTIVECAMPAIGN_URL=http://whatever
