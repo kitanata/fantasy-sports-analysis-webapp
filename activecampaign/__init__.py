@@ -12,11 +12,10 @@ class ActiveCampaign():
         self.api_key = api_key
         self.api_url = api_url
 
-
     def api(self, api_action, method='get', params={}, data={}):
         """Build and call the api. Simple wrapper function to make my life a
-           tiny bit easier, given that the ActiveCampaign wrapper they advertise
-           does not support python3
+           tiny bit easier, given that the ActiveCampaign wrapper they
+           advertise does not support python3
         """
         url = '{}/admin/api.php'.format(self.api_url)
 

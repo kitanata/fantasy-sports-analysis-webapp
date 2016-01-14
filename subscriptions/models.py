@@ -244,3 +244,33 @@ class Subscription(models.Model):
 
     def __str__(self):
         return '{} subscribed to {}'.format(self.user.email, self.product.name)
+
+    def save(self, *args, **kwargs):
+        # Grab contact if exists, and edit, or create contact if it
+        # doesn't exist.
+
+        response = ac.api(
+            'contact_view_email',
+            params={'email': self.user.email}
+        )
+
+        payload = {
+            'email': self.user.email,
+            'first_name': self.user.first_name,
+            'last_name': self.user.last_name,
+            'p[{}]'.format(self.product.list_id): self.product.list_id,
+            'status[{}]'.format(self.product.list_id): 1
+        }
+
+        if response['result_code'] == 0:
+            ac.api('contact_add', method='post', data=payload)
+        else:
+            payload['id'] = response['id']
+            ac.api(
+                'contact_edit',
+                method='post',
+                data=payload,
+                params={'overwrite': 0}
+            )
+
+        super(Subscription, self).save(*args, **kwargs)
