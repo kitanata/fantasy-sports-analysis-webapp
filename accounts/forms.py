@@ -5,7 +5,7 @@ from django.contrib.auth.forms import (
 )
 from django.utils.translation import ugettext_lazy as _
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
+from crispy_forms.layout import Layout, Submit, HTML
 
 
 class CrispyAuthenticationForm(AuthenticationForm):
@@ -29,7 +29,16 @@ class CrispyAuthenticationForm(AuthenticationForm):
         self.helper.form_id = 'login'
         self.helper.form_method = 'post'
         self.helper.form_action = 'login'
-        self.helper.add_input(Submit('login', 'Login'))
+
+        self.helper.layout = Layout(
+            'username',
+            'password',
+            HTML("""
+                <p><a href='{% url 'password_reset' %}'>
+                Forgot your password?</a></p>
+            """),
+            Submit('login', 'Login')
+        )
 
 
 class EmailUserCreationForm(forms.ModelForm):
