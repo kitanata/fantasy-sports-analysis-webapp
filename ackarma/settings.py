@@ -95,7 +95,7 @@ NOSE_ARGS = [
     '--cover-package=.',
 ]
 
-LOGIN_URL = '/login'
+LOGIN_URL = '/account/login'
 LOGIN_REDIRECT_URL = '/dashboard'
 
 GRAPPELLI_ADMIN_TITLE = 'AC Karma Sports'
@@ -105,3 +105,5 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 RECURLY_SUBDOMAIN = env('RECURLY_SUBDOMAIN')
 RECURLY_API_KEY = env('RECURLY_API_KEY')
 RECURLY_PUBLIC_KEY = env('RECURLY_PUBLIC_KEY')
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

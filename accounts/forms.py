@@ -1,11 +1,34 @@
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import (
-    ReadOnlyPasswordHashField, AuthenticationForm
+    ReadOnlyPasswordHashField, AuthenticationForm, PasswordResetForm,
+    SetPasswordForm
 )
+from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, HTML
+
+
+class CrispySetPasswordForm(SetPasswordForm):
+    def __init__(self, *args, **kwargs):
+        super(CrispySetPasswordForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_id = 'password_reset_confirm'
+        self.helper.form_method = 'post'
+        # need to make sure I post to the same exact url.
+        self.helper.form_action = ''
+        self.helper.add_input(Submit('changepassword', 'Change Password'))
+
+
+class CrispyResetForm(PasswordResetForm):
+    def __init__(self, *args, **kwargs):
+        super(CrispyResetForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_id = 'password_reset'
+        self.helper.form_method = 'post'
+        self.helper.form_action = 'password_reset'
+        self.helper.add_input(Submit('reset', 'Reset Password'))
 
 
 class CrispyAuthenticationForm(AuthenticationForm):
