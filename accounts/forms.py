@@ -4,7 +4,6 @@ from django.contrib.auth.forms import (
     ReadOnlyPasswordHashField, AuthenticationForm, PasswordResetForm,
     SetPasswordForm
 )
-from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, HTML

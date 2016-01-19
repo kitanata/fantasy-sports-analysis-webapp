@@ -7,6 +7,8 @@ machine:
     RECURLY_API_KEY: none
     RECURLY_SUBDOMAIN: none
     RECURLY_PUBLIC_KEY: none
+    MAILGUN_SERVER_NAME: none
+    MAILGUN_ACCESS_KEY: none
 deployment:
   staging:
     branch: master
