@@ -27,6 +27,8 @@ AUTH_USER_MODEL = 'accounts.EmailUser'
 
 INSTALLED_APPS = (
     'grappelli',
+    'django_gulp',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -34,7 +36,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'django_gulp',
     'django_nose',
     'debug_toolbar',
     'crispy_forms',
@@ -95,7 +96,7 @@ NOSE_ARGS = [
     '--cover-package=.',
 ]
 
-LOGIN_URL = '/login'
+LOGIN_URL = '/account/login'
 LOGIN_REDIRECT_URL = '/dashboard'
 
 GRAPPELLI_ADMIN_TITLE = 'AC Karma Sports'
@@ -104,4 +105,10 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 RECURLY_SUBDOMAIN = env('RECURLY_SUBDOMAIN')
 RECURLY_API_KEY = env('RECURLY_API_KEY')
+RECURLY_SUCCESS_URL = env('RECURLY_SUCCESS_URL')
+RECURLY_CANCEL_URL = env('RECURLY_CANCEL_URL')
 RECURLY_PUBLIC_KEY = env('RECURLY_PUBLIC_KEY')
+
+EMAIL_BACKEND = 'django_mailgun.MailgunBackend'
+MAILGUN_ACCESS_KEY = env('MAILGUN_ACCESS_KEY')
+MAILGUN_SERVER_NAME = env('MAILGUN_SERVER_NAME')

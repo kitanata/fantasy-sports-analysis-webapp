@@ -16,7 +16,7 @@ def generate_minimal_xml(notification_name):
     (django's code).
     """
     return '<?xml version="1.0" encoding="UTF-8"?><{0}></{0}>'.format(
-      notification_name
+        notification_name
     )
 
 

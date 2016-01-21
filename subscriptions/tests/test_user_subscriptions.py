@@ -1,11 +1,8 @@
 from django.test import TestCase, RequestFactory
 from django.core.urlresolvers import reverse
-from django.contrib.auth import get_user_model
-from django.utils import timezone
 from unittest.mock import patch, MagicMock
 from accounts.factories import EmailUserFactory
 from ..factories import ProductFactory, SubscriptionFactory
-from ..models import Subscription, Product, Sport
 from ..views import user_subscriptions
 
 
@@ -27,7 +24,6 @@ class UserSubscriptionsTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_context_populates_with_data(self):
-        today = timezone.now()
         response = user_subscriptions(self.request)
         data = response.context_data['subscriptions_by_sport']
 

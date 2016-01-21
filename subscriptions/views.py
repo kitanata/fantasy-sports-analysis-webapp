@@ -7,17 +7,30 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.utils import timezone
 from django.conf import settings
+from django.shortcuts import redirect
 from django.db.models import Q
+from django.core.urlresolvers import reverse
 from django.contrib import messages
 from datetime import timedelta
 from itertools import groupby, chain
-from .models import LineUp, Sport
+
+from .models import LineUp, Sport, Subscription, Product
 from .forms import BillingInfoForm
 from . import signals
 
 
 @login_required
 def dashboard(request):
+    if request.GET.get('success') == 'true':
+        product = Product.objects.get(recurly_plan_code=request.GET['plan'])
+        messages.success(
+            request,
+            ('Thanks for subscribing to the {} plan. Your lineups will appear '
+             'automatically on this page, and you\'ll also receive email '
+             'notifications.').format(product.name)
+        )
+        return redirect(reverse('dashboard'))
+
     lineups_by_date = []
     two_weeks_ago = timezone.now() - timedelta(days=14)
 
@@ -67,7 +80,9 @@ def user_subscriptions(request):
 
         for product in sport.product_set.all().order_by('price'):
             subscribed = bool(product.subscribed.filter(
-                email=request.user.email).count())
+                email=request.user.email,
+                subscription__state=Subscription.ACTIVE
+            ).count())
             sport_dict['products'].append({
                 'product': product,
                 'is_subscribed': subscribed
@@ -79,6 +94,120 @@ def user_subscriptions(request):
         'RECURLY_SUBDOMAIN': settings.RECURLY_SUBDOMAIN,
         'subscriptions_by_sport': subscriptions_by_sport
     })
+
+
+def upgrade_subscription(request, plan_code):
+    if not request.user:
+        messages.info(
+            request,
+            'To process your order you will need to create an account'
+        )
+        url = reverse('signup')
+        url = url + '?next=upgrade_subscription'
+        return redirect(reverse('signup'))
+    else:
+        email = request.user.email
+
+        try:
+            account = recurly.Account.get(email)
+            # Previously un-nested, unnecessary to try and call .billing_info
+            # on what is obviously None
+            try:
+                billing_info = account.billing_info
+            except AttributeError:
+                billing_info = None
+
+        except recurly.errors.NotFoundError:
+            account = None
+            billing_info = None
+
+        if request.method == 'POST':
+            form = BillingInfoForm(request.POST)
+            if form.is_valid():
+                form.clean()
+                token = form.cleaned_data['token']
+
+                if account is None:
+                    account = recurly.Account(account_code=email)
+                    account.first_name = request.user.first_name
+                    account.last_name = request.user.last_name
+                    account.email = email
+                    account.save()
+
+                if billing_info is None:
+                    account.billing_info = recurly.BillingInfo()
+                    billing_info = account.billing_info
+
+                billing_info.token_id = token
+                account.update_billing_info(billing_info)
+
+        if billing_info is not None:
+            product = Product.objects.get(recurly_plan_code=plan_code)
+            sport = product.sport
+            subscription = Subscription.objects.filter(
+                product__sport=sport,
+                user=request.user
+            ).first()
+
+            if subscription is None:
+                recurly_subscription = recurly.Subscription()
+                recurly_subscription.plan_code = plan_code
+                recurly_subscription.currency = 'USD'
+                recurly_subscription.account = account
+                recurly_subscription.save()
+
+                messages.success(
+                    request,
+                    'Thank you for subscribing to {}!'.format(product.name)
+                )
+
+                Subscription.objects.create(
+                    product=product,
+                    user=request.user,
+                    uuid=recurly_subscription.uuid,
+                    state=recurly_subscription.state,
+                    activated_at=recurly_subscription.activated_at
+                )
+            else:
+                recurly_subscription = recurly.Subscription.get(
+                    subscription.uuid
+                )
+                recurly_subscription.plan_code = plan_code
+                recurly_subscription.timeframe = 'now'
+                recurly_subscription.save()
+
+                subscription.product = product
+                subscription.uuid = recurly_subscription.uuid
+                subscription.state = recurly_subscription.state
+                subscription.activated_at = recurly_subscription.activated_at
+
+                subscription.save()
+
+                messages.success(
+                    request,
+                    'Thank you for upgrading your subscription to {}!'.format(
+                        product.name
+                    )
+                )
+
+            return redirect(reverse('dashboard'))
+
+        else:
+            messages.info(
+                request,
+                ('Please fill out billing information to subscribe to a '
+                 'product.')
+            )
+
+            form = BillingInfoForm(initial={
+                'first_name': request.user.first_name,
+                'last_name': request.user.last_name
+            })
+
+            return TemplateResponse(request, 'subscriptions/subscribe.html', {
+                'form': form,
+                'plan_code': plan_code
+            })
 
 
 @login_required
@@ -124,7 +253,17 @@ def billing_information(request):
             )
 
     if billing_info is not None:
-        billing = billing_info.__dict__
+        billing = dict()
+
+        # This is weird, but billing_info is not iterable, and
+        # calling __dict__ only works if I've set the values.
+        # thankfully recurly resource classes provide a tuple of the
+        # possible attributes.
+        for attribute in billing_info.attributes:
+            try:
+                billing[attribute] = getattr(billing_info, attribute)
+            except AttributeError:
+                billing[attribute] = None
 
         form = BillingInfoForm(initial={
             'first_name': billing.get('first_name', ''),

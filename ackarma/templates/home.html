@@ -12,3 +12,38 @@
         </div>
     </div>
 {% endblock %}
+
+{% block extra_js %}
+    <script>
+        (function () {
+            function toggle(elemsToShow, elemsToHide) {
+                elemsToHide.addClass('hidden').removeClass('show');
+                elemsToShow.addClass('show').removeClass('hidden');
+            }
+
+            $('.open-confirm-change .btn').click(function () {
+                var wrapper = $(this).parents('.button-wrapper');
+                var toBeHidden = wrapper.children('.open-confirm-change');
+                var toBeShown = wrapper.children('.confirm-change');
+
+                // Hide all already open confirmations, only letting one be open at a time.
+                toBeHidden = toBeHidden.add($('.confirm-change.show'));
+                toBeShown = toBeShown.add($('.open-confirm-change.hidden'));
+
+                toggle(toBeShown, toBeHidden);
+            });
+
+            $('.confirm-change .btn').click(function () {
+                var target = $(this).data('target');
+
+                if (target === 'cancel') {
+                    var wrapper = $(this).parents('.button-wrapper');
+                    var toBeShown = $('.open-confirm-change');
+                    var toBeHidden = wrapper.children('.confirm-change');
+
+                    toggle(toBeShown, toBeHidden);
+                }
+            });
+        })();
+    </script>
+{% endblock %}

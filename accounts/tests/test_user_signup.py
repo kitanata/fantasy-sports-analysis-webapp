@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth import get_user_model
 from django.contrib.sessions.middleware import SessionMiddleware
 from django.utils.six.moves.urllib.parse import urlsplit
+from django.contrib.messages.storage.fallback import FallbackStorage
 
 from ..forms import EmailUserCreationForm
 from ..views import signup
@@ -17,6 +18,12 @@ def add_session_to_request(request):
     middleware = SessionMiddleware()
     middleware.process_request(request)
     request.session.save()
+
+
+def add_messages_to_request(request):
+    """Annotate a request object with messages storage"""
+    storage = FallbackStorage(request)
+    request._messages = storage
 
 
 class UserSignupTest(TestCase):
@@ -43,11 +50,21 @@ class UserSignupTest(TestCase):
 
         request = self.factory.post(reverse('signup'), data)
         add_session_to_request(request)
+        add_messages_to_request(request)
         response = signup(request)
 
         user = get_user_model().objects.get(email=data['email'])
         self.assertIsNotNone(user)
         self.assertEqual(user.email, data['email'])
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(len(request._messages), 1)
+
+        self.assertEqual(
+            list(request._messages)[0].message,
+            ('Thanks for creating an account! You can access your account '
+             'details through the dropdown in the upper right of the page'
+             '.')
+        )
 
     # Regular staticfiles storage over whitenoise means we don't get a
     # ValueError due to not finding main.css (because it hasn't been built)

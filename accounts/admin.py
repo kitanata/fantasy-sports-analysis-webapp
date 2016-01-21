@@ -28,8 +28,8 @@ class EmailUserAdmin(UserAdmin):
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ('first_name', 'last_name', 'email', 'is_staff')
+    list_display = ('email', 'first_name', 'last_name', 'is_staff')
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups')
     search_fields = ('email', 'first_name', 'last_name')
-    ordering = ('first_name', 'last_name', 'email',)
+    ordering = ('email', 'first_name', 'last_name',)
     filter_horizontal = ('groups', 'user_permissions',)

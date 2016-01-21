@@ -9,6 +9,7 @@ from .models import LineUp, Subscription, Product, Sport
 class LineUpAdmin(admin.ModelAdmin):
     list_display = (
         '__str__',
+        'pdf',
         'date_uploaded',
         'date_email_sent',
         'products_list',
@@ -31,6 +32,12 @@ class SubscriptionAdmin(admin.ModelAdmin):
         'expired_at',
     )
 
+    list_filter = (
+        'user',
+        'state',
+        'product',
+    )
+
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
@@ -41,6 +48,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = (
         'name',
         'sport',
+        'recurly_plan_code',
         'price',
         'duration',
     )
