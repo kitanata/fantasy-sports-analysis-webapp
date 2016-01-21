@@ -1,12 +1,12 @@
+from decimal import Decimal
 from django import template
 
 
 register = template.Library()
+TWOPLACES = Decimal(10) ** -2
 
 
 @register.filter
 def cents_to_dollars(value):
-    value = str(value)
-    dollars_part = value[:-2]
-    cents_part = value[-2:]
-    return '${}.{}'.format(dollars_part, cents_part)
+    d = Decimal(value) / 100
+    return '${}'.format(d.quantize(TWOPLACES))
