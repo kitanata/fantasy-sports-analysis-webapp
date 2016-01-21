@@ -3,7 +3,6 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from django.contrib import messages
 
 from .forms import (
     EmailUserCreationForm,
@@ -17,8 +16,10 @@ def signup(request):
         form = EmailUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            user = authenticate(username=form.cleaned_data['email'],
-                                password=form.cleaned_data['password1'])
+            user = authenticate(
+                username=form.cleaned_data['email'],
+                password=form.cleaned_data['password1']
+            )
             login(request, user)
             messages.success(
                 request,

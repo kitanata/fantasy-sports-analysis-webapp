@@ -1,9 +1,66 @@
 from django import forms
 from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.contrib.auth.forms import (
+    ReadOnlyPasswordHashField, AuthenticationForm, PasswordResetForm,
+    SetPasswordForm
+)
 from django.utils.translation import ugettext_lazy as _
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
+from crispy_forms.layout import Layout, Submit, HTML
+
+
+class CrispySetPasswordForm(SetPasswordForm):
+    def __init__(self, *args, **kwargs):
+        super(CrispySetPasswordForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_id = 'password_reset_confirm'
+        self.helper.form_method = 'post'
+        # need to make sure I post to the same exact url.
+        self.helper.form_action = ''
+        self.helper.add_input(Submit('changepassword', 'Change Password'))
+
+
+class CrispyResetForm(PasswordResetForm):
+    def __init__(self, *args, **kwargs):
+        super(CrispyResetForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_id = 'password_reset'
+        self.helper.form_method = 'post'
+        self.helper.form_action = 'password_reset'
+        self.helper.add_input(Submit('reset', 'Reset Password'))
+
+
+class CrispyAuthenticationForm(AuthenticationForm):
+    username = forms.CharField(
+        max_length=254,
+        widget=forms.EmailInput(attrs={
+            'autofocus': '',
+            'placeholder': 'example@example.com'
+        }),
+    )
+    password = forms.CharField(
+        label=_('Password'),
+        widget=forms.PasswordInput(attrs={
+            'placeholder': '••••••••'
+        })
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(CrispyAuthenticationForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_id = 'login'
+        self.helper.form_method = 'post'
+        self.helper.form_action = 'login'
+
+        self.helper.layout = Layout(
+            'username',
+            'password',
+            HTML("""
+                <p><a href='{% url 'password_reset' %}'>
+                Forgot your password?</a></p>
+            """),
+            Submit('login', 'Login')
+        )
 
 
 class EmailUserCreationForm(forms.ModelForm):
@@ -12,25 +69,38 @@ class EmailUserCreationForm(forms.ModelForm):
     repeated password.
     """
     error_messages = {
-        'duplicate_email': _("A user with that email already exists."),
-        'password_mismatch': _("The two password fields didn't match."),
+        'duplicate_email': _('A user with that email already exists.'),
+        'password_mismatch': _('The two password fields didn\'t match.'),
     }
 
-    password1 = forms.CharField(label=_("Password"),
-                                widget=forms.PasswordInput)
-    password2 = forms.CharField(label=_("Confirm password"),
-                                widget=forms.PasswordInput,
-                                help_text=_('Enter the same password as above,'
-                                            ' for verification.'))
+    password1 = forms.CharField(
+        label=_('Password'),
+        widget=forms.PasswordInput(attrs={
+            'placeholder': '••••••••'
+        }),
+    )
+
+    password2 = forms.CharField(
+        label=_('Confirm password'),
+        widget=forms.PasswordInput(attrs={
+            'placeholder': '••••••••'
+        }),
+        help_text=_('Enter the same password as above, for verification.')
+    )
 
     class Meta:
         model = get_user_model()
-        fields = ('first_name', 'last_name', 'email')
+        fields = ('email',)
+        widgets = {
+            'email': forms.EmailInput(attrs={
+                'placeholder': 'example@example.com'
+            })
+        }
 
     def clean_email(self):
         # Since EmailUser.email is unique, this check is redundant,
         # but it sets a nicer error message than the ORM. See #13147.
-        email = self.cleaned_data["email"]
+        email = self.cleaned_data['email']
         try:
             get_user_model()._default_manager.get(email=email)
         except get_user_model().DoesNotExist:
