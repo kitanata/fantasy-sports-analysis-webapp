@@ -83,9 +83,23 @@ def user_subscriptions(request):
                 email=request.user.email,
                 subscription__state=Subscription.ACTIVE
             ).count())
+
+            existing_subscription = request.user.subscription_set.filter(
+                product__sport=sport,
+                state=Subscription.ACTIVE
+            ).first()
+
+            if existing_subscription.product.price < product.price:
+                label = 'Upgrade'
+            elif existing_subscription is None:
+                label = 'Sign Up'
+            else:
+                label = 'Downgrade'
+
             sport_dict['products'].append({
                 'product': product,
-                'is_subscribed': subscribed
+                'is_subscribed': subscribed,
+                'label': label
             })
 
         subscriptions_by_sport.append(sport_dict)
