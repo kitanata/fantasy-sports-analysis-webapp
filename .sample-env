@@ -3,6 +3,10 @@ SECRET_KEY=5y_+zh%1=dzr64b$h^f&r7n_*(+5lx&$03%*l#z7n_!5*#+qzb
 DATABASE_URL=postgresql://localhost/ackarma
 RECURLY_API_KEY=asdf12134
 RECURLY_SUBDOMAIN=ackarma
+RECURLY_SUCCESS_URL=http://localhost:8000/dashboard/?success=true&account={{account_code}}&plan={{plan_code}}
+RECURLY_CANCEL_URL=http://localhost:8000/dashboard/?success=false
 RECURLY_PUBLIC_KEY=asdf
 ACTIVECAMPAIGN_API_KEY=asdfasdf
 ACTIVECAMPAIGN_URL=http://whatever
+MAILGUN_ACCESS_KEY=asdf
+MAILGUN_SERVER_NAME=asdfasdf

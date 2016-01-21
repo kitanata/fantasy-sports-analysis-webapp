@@ -1,5 +1,4 @@
 from django.test import TestCase
-from decimal import Decimal
 from unittest.mock import patch, MagicMock
 
 from ..factories import ProductFactory
@@ -19,7 +18,7 @@ class TestProduct(TestCase):
 
     @patch('recurly.Plan', spec=True)
     def test_get_recurly_plan(self, mock):
-        plan = self.product.get_recurly_plan()
+        self.product.get_recurly_plan()
 
         mock.get.assert_called_with(self.product.recurly_plan_code)
 

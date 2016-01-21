@@ -11,6 +11,7 @@ django-debug-toolbar==1.4
 django-environ==0.4.0
 django-grappelli==2.7.2
 django-gulp==2.1.1
+django-mailgun==0.8.0
 django-nose==1.4.2
 env-tools==2.0.0
 factory-boy==2.6.0
