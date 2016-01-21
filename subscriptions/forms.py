@@ -1,6 +1,10 @@
 from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
+from activecampaign import ActiveCampaign
+
+
+ac = ActiveCampaign()
 
 
 class BillingInfoForm(forms.Form):
@@ -25,3 +29,29 @@ class BillingInfoForm(forms.Form):
         self.helper.form_method = 'post'
         self.helper.form_action = 'billing_information'
         self.helper.add_input(Submit('save', 'Save Billing Info'))
+
+
+class ProductAdminForm(forms.ModelForm):
+    def get_choices():
+        choices = []
+
+        response = ac.api('message_template_list', params={
+            'ids': 'all'
+        })
+
+        for k, v in response.items():
+            try:
+                choice = (v['id'], v['name'],)
+                choices.append(choice)
+            except AttributeError:
+                pass
+            except TypeError:
+                pass
+
+        return choices
+
+    template_id = forms.ChoiceField(
+        label='Template',
+        required=False,
+        choices=get_choices
+    )

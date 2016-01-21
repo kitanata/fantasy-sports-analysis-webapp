@@ -98,6 +98,12 @@ class Product(models.Model):
         help_text='ActiveCampaign mailing list ID.'
     )
 
+    template_id = models.IntegerField(
+        blank=True,
+        null=True,
+        help_text='ActiveCampaign template to use when sending updates.'
+    )
+
     def is_daily(self):
         if self.duration == self.DAILY:
             return True
@@ -190,6 +196,12 @@ class LineUp(models.Model):
 
     def __str__(self):
         return '#{}'.format(self.pk)
+
+    def save(self, *args, **kwargs):
+        # if self.campaign_id:
+        #     response = ac.api('campaign_create', method='post')
+
+        super(LineUp, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Line Up'

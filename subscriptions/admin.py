@@ -3,6 +3,7 @@ from django.db import models
 from django.forms import CheckboxSelectMultiple
 
 from .models import LineUp, Subscription, Product, Sport
+from .forms import ProductAdminForm
 
 
 @admin.register(LineUp)
@@ -41,6 +42,8 @@ class SubscriptionAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
+    form = ProductAdminForm
+
     prepopulated_fields = {
         'recurly_plan_code': ('sport', 'name',)
     }
