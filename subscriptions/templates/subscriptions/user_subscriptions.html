@@ -22,7 +22,7 @@
                                         {% endif %}
                                     </div>
                                     <div class="hidden confirm-change">
-                                        {% if value.label != 'Sign Up' %}
+                                        {% if sport.existing_subscription is not None %}
                                             <p>{{ value.label }} your Subscription?</p>
                                         {% else %}
                                             <p>{{ value.label }} for this product? Your card on file will be immediately charged.</p>
