@@ -22,6 +22,9 @@ class BlogPage(Page):
         FieldPanel('body', classname="full")
     ]
 
+    parent_page_types = ['blog.BlogIndexPage']
+    subpage_types = []
+
 
 class BlogIndexPage(Page):
     intro = RichTextField(blank=True)
@@ -29,6 +32,8 @@ class BlogIndexPage(Page):
     content_panels = Page.content_panels + [
         FieldPanel('intro', classname="full")
     ]
+
+    subpage_types = ['blog.BlogPage']
 
     def get_context(self, request):
         context = super(BlogIndexPage, self).get_context(request)
