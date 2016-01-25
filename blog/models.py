@@ -6,14 +6,6 @@ from wagtail.wagtailadmin.edit_handlers import FieldPanel
 from wagtail.wagtailsearch import index
 
 
-class BlogIndexPage(Page):
-    intro = RichTextField(blank=True)
-
-    content_panels = Page.content_panels + [
-        FieldPanel('intro', classname="full")
-    ]
-
-
 class BlogPage(Page):
     date = models.DateField("Post date")
     intro = models.CharField(max_length=250)
@@ -29,3 +21,18 @@ class BlogPage(Page):
         FieldPanel('intro'),
         FieldPanel('body', classname="full")
     ]
+
+
+class BlogIndexPage(Page):
+    intro = RichTextField(blank=True)
+
+    content_panels = Page.content_panels + [
+        FieldPanel('intro', classname="full")
+    ]
+
+    def get_context(self, request):
+        context = super(BlogIndexPage, self).get_context(request)
+
+        # This makes sure we're actually getting BlogPage Instances
+        context['blog_entries'] = BlogPage.objects.child_of(self).live()
+        return context
