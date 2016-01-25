@@ -3,5 +3,16 @@
 {% load staticfiles %}
 
 {% block content %}
-    {{ page.body|richtext }}
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h1>{{ page.title }}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                {{ page.body|richtext }}
+            </div>
+        </div>
+    </div>
 {% endblock %}
