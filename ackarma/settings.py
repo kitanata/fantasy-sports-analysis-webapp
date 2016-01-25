@@ -26,7 +26,7 @@ ALLOWED_HOSTS = ['*']
 AUTH_USER_MODEL = 'accounts.EmailUser'
 
 INSTALLED_APPS = (
-    'grappelli',
+    'overextends',
     'django_gulp',
 
     'django.contrib.admin',
@@ -36,10 +36,28 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'wagtail.wagtailforms',
+    'wagtail.wagtailredirects',
+    'wagtail.wagtailembeds',
+    'wagtail.wagtailsites',
+    'wagtail.wagtailusers',
+    'wagtail.wagtailsnippets',
+    'wagtail.wagtaildocs',
+    'wagtail.wagtailimages',
+    'wagtail.wagtailsearch',
+    'wagtail.wagtailadmin',
+    'wagtail.wagtailcore',
+
+    'modelcluster',
+    'compressor',
+    'taggit',
+
     'django_nose',
     'debug_toolbar',
     'crispy_forms',
 
+    'home',
+    'blog',
     'accounts',
     'subscriptions',
 )
@@ -53,6 +71,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'wagtail.wagtailcore.middleware.SiteMiddleware',
+    'wagtail.wagtailredirects.middleware.RedirectMiddleware',
 )
 
 ROOT_URLCONF = 'ackarma.urls'
@@ -99,7 +119,7 @@ NOSE_ARGS = [
 LOGIN_URL = '/account/login'
 LOGIN_REDIRECT_URL = '/dashboard'
 
-GRAPPELLI_ADMIN_TITLE = 'AC Karma Sports'
+WAGTAIL_SITE_NAME = 'AC Karma Sports'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 

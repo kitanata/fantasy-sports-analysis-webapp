@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+{% load staticfiles %}
+
+{% block content %}
+    <h1>{{ page.title }}</h1>
+
+    <div class="intro">{{ page.intro|richtext }}</div>
+
+    {% for child in page.get_children.live %}
+        <a href="{% pageurl child %}">{{ child.title }}</a>
+    {% endfor %}
+{% endblock %}
