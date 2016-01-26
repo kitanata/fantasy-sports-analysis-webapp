@@ -72,20 +72,35 @@ def user_subscriptions(request):
     subscriptions_by_sport = []
     sports = Sport.objects.all().prefetch_related('product_set')
 
+    exsiting_subscriptions = request.user.subscription_set.filter(
+        state=Subscription.ACTIVE
+    )
+
     for sport in sports:
+        existing_subscription = exsiting_subscriptions.filter(
+            product__sport=sport
+        ).first()
+
         sport_dict = {
             'name': sport.name,
+            'existing_subscription': existing_subscription,
             'products': []
         }
 
         for product in sport.product_set.all().order_by('price'):
-            subscribed = bool(product.subscribed.filter(
-                email=request.user.email,
-                subscription__state=Subscription.ACTIVE
-            ).count())
+            subscribed = product == existing_subscription.product
+
+            if existing_subscription.product.price < product.price:
+                label = 'Upgrade'
+            elif existing_subscription is None:
+                label = 'Sign Up'
+            else:
+                label = 'Downgrade'
+
             sport_dict['products'].append({
                 'product': product,
-                'is_subscribed': subscribed
+                'is_subscribed': subscribed,
+                'label': label
             })
 
         subscriptions_by_sport.append(sport_dict)
