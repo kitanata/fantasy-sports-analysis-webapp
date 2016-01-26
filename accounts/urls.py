@@ -55,4 +55,5 @@ urlpatterns = [
     ),
     url(r'^info/$', views.account_info, name='account_info'),
     url(r'^delete/$', views.delete_account, name='delete_account'),
+    url(r'^payment-history/$', views.payment_history, name='payment_history'),
 ]

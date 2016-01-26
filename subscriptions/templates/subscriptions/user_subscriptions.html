@@ -18,11 +18,15 @@
                                         {% if value.is_subscribed %}
                                             <button class="btn btn-primary">Current</button>
                                         {% else %}
-                                            <button class="btn btn-default">Sign Up</button>
+                                            <button class="btn btn-default">{{ value.label }}</button>
                                         {% endif %}
                                     </div>
                                     <div class="hidden confirm-change">
-                                        <p>Change your Subscription?</p>
+                                        {% if sport.existing_subscription %}
+                                            <p>{{ value.label }} your Subscription?</p>
+                                        {% else %}
+                                            <p>{{ value.label }} for this product? Your card on file will be immediately charged.</p>
+                                        {% endif %}
                                         <form action="{% url 'upgrade_subscription' plan_code=value.product.recurly_plan_code %}" method="GET">
                                             <button class="btn btn-default" data-target="cancel">Cancel</button>
                                             <input
