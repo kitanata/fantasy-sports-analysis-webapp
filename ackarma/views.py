@@ -26,7 +26,7 @@ def homepage(request):
                 'is_subscribed': subscribed
             })
 
-    subscriptions_by_sport.append(sport_dict)
+        subscriptions_by_sport.append(sport_dict)
 
     return TemplateResponse(request, 'home.html', {
         'subscriptions_by_sport': subscriptions_by_sport
