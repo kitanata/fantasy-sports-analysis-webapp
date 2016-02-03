@@ -5,7 +5,7 @@ from .models import LineUp, Subscription, Product
 class LineUpModelAdmin(ModelAdmin):
     model = LineUp
     menu_label = 'Line Ups'
-    menu_icon = 'date'
+    menu_icon = 'list-ol'
     menu_order = 100
     add_to_settings_menu = False
 
@@ -31,7 +31,7 @@ class LineUpModelAdmin(ModelAdmin):
 class ProductModelAdmin(ModelAdmin):
     model = Product
     menu_label = 'Products'
-    menu_icon = 'date'
+    menu_icon = 'list-ul'
     menu_order = 200
     add_to_settings_menu = False
 
@@ -56,8 +56,8 @@ class ProductModelAdmin(ModelAdmin):
 class SubscriptionModelAdmin(ModelAdmin):
     model = Subscription
     menu_label = 'Subscriptions'
-    menu_icon = 'date'
-    menu_order = 300
+    menu_icon = 'time'
+    menu_order = 200
     add_to_settings_menu = False
 
     list_display = (
