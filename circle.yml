@@ -11,6 +11,8 @@ machine:
     RECURLY_PUBLIC_KEY: none
     MAILGUN_SERVER_NAME: none
     MAILGUN_ACCESS_KEY: none
+    ACTIVECAMPAIGN_API_KEY: none
+    ACTIVECAMPAIGN_URL: none
 deployment:
   staging:
     branch: master
