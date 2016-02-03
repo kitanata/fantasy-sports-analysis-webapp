@@ -1,3 +1,5 @@
+import recurly
+
 from django.template.response import TemplateResponse
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect
@@ -72,4 +74,21 @@ def delete_account(request):
 
     return TemplateResponse(request, 'accounts/delete_account.html', {
         'form': form
+    })
+
+
+@login_required
+def payment_history(request):
+    email = request.user.email
+
+    try:
+        account = recurly.Account.get(email)
+        adjustments = account.adjustments()
+    except recurly.errors.NotFoundError:
+        account = None
+        adjustments = None
+
+    return TemplateResponse(request, 'accounts/payment_history.html', {
+        'account': account,
+        'adjustments': adjustments
     })
