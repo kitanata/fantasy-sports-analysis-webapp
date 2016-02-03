@@ -4,6 +4,7 @@ import factory.fuzzy
 from django.utils import timezone
 from django.utils.text import slugify
 from accounts.factories import EmailUserFactory
+from ackarma.factories import DocumentFactory
 from . import models
 
 
@@ -31,7 +32,7 @@ class LineUpFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = models.LineUp
 
-    pdf = factory.django.FileField(filename='somepdf.pdf')
+    pdf = factory.SubFactory(DocumentFactory)
     date_uploaded = factory.LazyAttribute(lambda obj: timezone.now())
 
     @factory.post_generation

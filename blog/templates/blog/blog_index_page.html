@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+{% load staticfiles %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <h1>{{ page.title }}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="intro">{{ page.intro|richtext }}</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <ul>
+                    {% for blog_entry in blog_entries %}
+                        <li>
+                            <a href="{% pageurl blog_entry %}">{{ blog_entry.title }}</a> posted: {{ blog_entry.date|date:"SHORT_DATE_FORMAT" }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}
