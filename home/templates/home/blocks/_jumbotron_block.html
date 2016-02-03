@@ -1,0 +1,16 @@
+{% load wagtailcore_tags %}
+{% load wagtailimages_tags %}
+
+<div style="position:relative;">
+    {% image value.image fill-1600x800 as img %}
+    <div class="jumbotron-image" style="background-image:url({{ img.url }});">
+        <div class="container" style="color:#FFF;">
+            <div class="row">
+                <div class="col-xs-12 text-center">
+                    <h1>{{ value.heading }}</h1>
+                    {{ value.body|richtext }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
