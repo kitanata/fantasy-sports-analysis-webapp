@@ -3,19 +3,32 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 from django.core.validators import RegexValidator
+from django.forms import CheckboxSelectMultiple
 from decimal import Decimal
+from wagtail.wagtailadmin.edit_handlers import (
+    FieldPanel, FieldRowPanel, MultiFieldPanel
+)
+from wagtail.wagtailsnippets.models import register_snippet
+from wagtail.wagtailsnippets.edit_handlers import SnippetChooserPanel
+from wagtail.wagtaildocs.edit_handlers import DocumentChooserPanel
+from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 
 
 recurly.SUBDOMAIN = settings.RECURLY_SUBDOMAIN
 recurly.API_KEY = settings.RECURLY_API_KEY
 
 
+@register_snippet
 class Sport(models.Model):
     name = models.CharField(
         max_length=128,
         help_text=('Will be used to group subscriptions together, should be '
                    'a display friendly name')
     )
+
+    panels = [
+        FieldPanel('name'),
+    ]
 
     def __str__(self):
         return '%s' % self.name
@@ -63,7 +76,12 @@ class Product(models.Model):
     )
 
     # Sport is used on several pages to group products for display.
-    sport = models.ForeignKey(Sport, null=True)
+    sport = models.ForeignKey(
+        Sport,
+        null=True,
+        on_delete=models.SET_NULL,
+        help_text='Used to group together products.'
+    )
 
     # The price of the subscription, stored as a decimal field, but
     # converted to an integer in cents for storage on recurly.
@@ -82,12 +100,27 @@ class Product(models.Model):
     )
 
     # Upload an image for display on marketing screens.
-    image = models.ImageField(
-        blank=True,
+    marketing_image = models.ForeignKey(
+        'wagtailimages.Image',
         null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+',
         help_text=('Displayed on a user\'s dashboard page, and in any'
                    'marketing messaging related to this product.')
     )
+
+    panels = [
+        FieldPanel('name'),
+        SnippetChooserPanel('sport'),
+        ImageChooserPanel('marketing_image'),
+        MultiFieldPanel([
+            FieldRowPanel([
+                FieldPanel('duration', classname='col6'),
+                FieldPanel('price', classname='col6'),
+            ]),
+        ], 'Price and Duration'),
+    ]
 
     def is_daily(self):
         if self.duration == self.DAILY:
@@ -130,7 +163,13 @@ class Product(models.Model):
 
 
 class LineUp(models.Model):
-    pdf = models.FileField()
+    uploaded_pdf = models.ForeignKey(
+        'wagtaildocs.Document',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+'
+    )
 
     date_uploaded = models.DateTimeField(
         verbose_name='Date Uploaded',
@@ -151,6 +190,13 @@ class LineUp(models.Model):
         return ', '.join([product.name for product in self.products.all()])
 
     products_list.verbose_name = 'List of Products'
+
+    panels = [
+        DocumentChooserPanel('uploaded_pdf'),
+        FieldPanel('date_uploaded'),
+        FieldPanel('date_email_sent'),
+        FieldPanel('products', widget=CheckboxSelectMultiple)
+    ]
 
     def __str__(self):
         return '#{}'.format(self.pk)
@@ -174,11 +220,21 @@ class Subscription(models.Model):
     )
 
     # Relations we use locally.
-    product = models.ForeignKey(Product)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    product = models.ForeignKey(
+        Product,
+        related_name='product',
+        help_text='The product this subscription is for.'
+    )
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        help_text='The user that owns this subscription.'
+    )
 
     # Recurly Mirrored Fields:
     state = models.CharField(
+        blank=False,
+        null=False,
         max_length=64,
         choices=STATE_CHOICES
     )
@@ -187,7 +243,9 @@ class Subscription(models.Model):
     # from Recurly.
     uuid = models.CharField(
         max_length=128,
-        db_index=True
+        db_index=True,
+        help_text='Recurly uuid.',
+        editable=False
     )
 
     activated_at = models.DateTimeField(
@@ -209,6 +267,23 @@ class Subscription(models.Model):
         verbose_name='Date Expired',
         help_text='Records the date this subscription expired, or will expire.'
     )
+
+    panels = [
+        MultiFieldPanel([
+            FieldRowPanel([
+                FieldPanel('product', classname='col6'),
+                FieldPanel('user', classname='col6'),
+            ]),
+        ], 'User and Product'),
+        FieldPanel('state'),
+        MultiFieldPanel([
+            FieldRowPanel([
+                FieldPanel('activated_at', classname='col4'),
+                FieldPanel('expired_at', classname='col4'),
+                FieldPanel('canceled_at', classname='col4'),
+            ]),
+        ], 'Dates'),
+    ]
 
     def __str__(self):
         return '#{}'.format(self.pk)

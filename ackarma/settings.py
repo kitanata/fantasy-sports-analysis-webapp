@@ -48,6 +48,7 @@ INSTALLED_APPS = (
     'wagtail.wagtailadmin',
     'wagtail.wagtailcore',
     'wagtail.contrib.wagtailstyleguide',
+    'wagtailmodeladmin',
 
     'modelcluster',
     'compressor',
@@ -74,6 +75,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
     'wagtail.wagtailcore.middleware.SiteMiddleware',
     'wagtail.wagtailredirects.middleware.RedirectMiddleware',
+    'wagtailmodeladmin.middleware.ModelAdminMiddleware',
 )
 
 ROOT_URLCONF = 'ackarma.urls'
