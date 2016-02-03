@@ -163,7 +163,7 @@ class Product(models.Model):
 
 
 class LineUp(models.Model):
-    uploaded_pdf = models.ForeignKey(
+    pdf = models.ForeignKey(
         'wagtaildocs.Document',
         null=True,
         blank=True,
@@ -192,7 +192,7 @@ class LineUp(models.Model):
     products_list.verbose_name = 'List of Products'
 
     panels = [
-        DocumentChooserPanel('uploaded_pdf'),
+        DocumentChooserPanel('pdf'),
         FieldPanel('date_uploaded'),
         FieldPanel('date_email_sent'),
         FieldPanel('products', widget=CheckboxSelectMultiple)

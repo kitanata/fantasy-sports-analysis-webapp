@@ -11,7 +11,7 @@ class LineUpModelAdmin(ModelAdmin):
 
     list_display = (
         '__str__',
-        'uploaded_pdf',
+        'pdf',
         'date_uploaded',
         'date_email_sent',
         'products_list',
@@ -23,7 +23,7 @@ class LineUpModelAdmin(ModelAdmin):
     )
 
     search_fields = (
-        'uploaded_pdf__title',
+        'pdf__title',
         'date_uploaded',
     )
 
