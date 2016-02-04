@@ -15,8 +15,15 @@ MEDIA_URL = '/media/'
 DEBUG = env('DEBUG')
 
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+
 STATICFILES_DIRS = (
     site_base('static'),
+)
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
 )
 
 SECRET_KEY = env('SECRET_KEY')
@@ -104,6 +111,22 @@ WSGI_APPLICATION = 'ackarma.wsgi.application'
 
 DATABASES = {
     'default': env.db()
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
 }
 
 LANGUAGE_CODE = 'en-us'
