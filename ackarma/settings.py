@@ -54,17 +54,17 @@ INSTALLED_APPS = (
     'wagtail.wagtailsearch',
     'wagtail.wagtailadmin',
     'wagtail.wagtailcore',
+    'wagtail.contrib.settings',
     'wagtail.contrib.wagtailstyleguide',
     'wagtailmodeladmin',
 
     'modelcluster',
     'compressor',
     'taggit',
-
     'django_nose',
     'debug_toolbar',
     'crispy_forms',
-
+    'activecampaign',
     'home',
     'blog',
     'accounts',
