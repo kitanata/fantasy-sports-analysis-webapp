@@ -1,4 +1,7 @@
 @import 'variables';
-@import '../vendor/bootstrap-sass/assets/stylesheets/bootstrap';
+
+@import 'bourbon/bourbon';
+@import 'base/base';
+@import 'neat/neat'
 
 @import 'modules/navbar';
