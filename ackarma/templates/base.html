@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load nav_tags %}
 {% load wagtailcore_tags %}
 {% load wagtailuserbar %}
 
@@ -24,38 +25,14 @@
             <script>window.html5 || document.write('<script src="js/vendor/html5shiv.js"><\/script>')</script>
             <![endif]-->
     </head>
-    <body>
+    <body class="{% block body_class %}{% endblock %}">
+
         {% wagtailuserbar %}
 
-        <nav class="navbar navbar-default">
-            <div class="container">
-                {% with request.site.root_page as site_root %}
-                    <div class="navbar-header">
-                        <a class="navbar-brand" href="{% pageurl site_root %}"><img src="{% static "images/logo.png" %}"></a>
-                    </div>
-                    <ul class="nav navbar-nav">
-                        {% for child in site_root.get_children.live.in_menu %}
-                            <li><a href="{% pageurl child %}">{{ child.title }}</a></li>
-                        {% endfor %}
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                        {% if request.user.is_authenticated %}
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ request.user.email }} <span class="caret"></span></a>
-                                <ul class="dropdown-menu" id="user-account-dropdown">
-                                    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
-                                    <li><a href="{% url 'account_info' %}">My Account</a></li>
-                                    <li><a href="{% url 'logout' %}?next=/">Log Out</a></li>
-                                </ul>
-                            </li>
-                        {% else %}
-                            <li><a href="{% url 'login' %}">Log In</a></li>
-                            <li><a href="{% url 'signup' %}">Sign Up</a></li>
-                        {% endif %}
-                    </ul>
-                {% endwith %}
-            </div>
-        </nav>
+        {% block navbar %}
+            {% get_site_root as site_root %}
+            {% top_menu parent=site_root calling_page=self %}
+        {% endblock %}
 
         <div class="container">
             <div class="row">

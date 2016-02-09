@@ -65,6 +65,7 @@ INSTALLED_APPS = (
     'debug_toolbar',
     'crispy_forms',
 
+    'common',
     'home',
     'blog',
     'accounts',

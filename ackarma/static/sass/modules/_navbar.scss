@@ -1,7 +1,96 @@
-.navbar-brand {
-    padding: 25px $navbar-padding-horizontal;
-}
+$navbar-height: 100px;
+$navbar-background: white;
+$navbar-color: $orange;
+$navbar-color-hover: darken($navbar-color, 20%);
+$navbar-active-link-color: darken($navbar-color-hover, 20%);
+$navbar-padding: 1em;
 
-.navbar-brand > img {
-    height: 50px;
+$horizontal-bar-mode: em(860);
+
+header#top-nav {
+    height: $navbar-height;
+    background-color: $navbar-background;
+    width: 100%;
+    z-index: 999;
+
+    .nav-wrapper {
+        @include clearfix;
+        @include outer-container;
+        position: relative;
+        z-index: 9999;
+    }
+
+    .logo {
+        float: left;
+        max-height: $navbar-height;
+        padding-left: $navbar-padding;
+        padding-right: 2em;
+
+        img {
+            max-height: $navbar-height;
+            padding: 0.8em 0;
+        }
+    }
+
+    nav {
+        float: none;
+        min-height: $navbar-height;
+        z-index: 99999;
+
+        @include media ($horizontal-bar-mode) {
+            float: left;
+        }
+    }
+
+    ul.nav-menu {
+        clear: both;
+        display: block;
+        margin: 0 auto;
+        overflow: visible;
+        padding: 0;
+        width: 100%;
+        z-index: 9999;
+
+        @include media ($horizontal-bar-mode) {
+            display: inline;
+            margin: 0;
+            padding: 0;
+        }
+    }
+
+
+    ul li.nav-link {
+        background: $navbar-background;
+        display: block;
+        line-height: $navbar-height;
+        overflow: hidden;
+        padding-right: 0.8em;
+        text-align: right;
+        width: 100%;
+        z-index: 9999;
+
+        @include media ($horizontal-bar-mode) {
+            background: transparent;
+            display: inline;
+            line-height: $navbar-height;
+            text-decoration: none;
+            width: auto;
+        }
+
+        a {
+            color: $navbar-color;
+            display: inline-block;
+            text-decoration: none;
+
+            &:focus,
+            &:hover {
+                color: $navbar-color-hover;
+            }
+        }
+    }
+
+    .active a {
+        border-bottom: 1px solid $navbar-active-link-color;
+        padding-bottom: 3px;
+    }
 }

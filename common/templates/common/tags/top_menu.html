@@ -1,0 +1,47 @@
+{% load staticfiles %}
+{% load wagtailcore_tags %}
+{% load nav_tags %}
+
+{% get_site_root as site_root %}
+
+<header id="top-nav" role="banner">
+    <div class="nav-wrapper">
+        <a class="logo" href="{% pageurl site_root %}"><img src="{% static "images/logo.png" %}"></a>
+        <nav role="navigation">
+            <ul class="nav-menu">
+                {% for menuitem in menuitems %}
+                    <li class="nav-link {% if menuitem.show_dropdown %}dropdown{% endif %}{% if menuitem.active %} active{% endif %}">
+                        {% if menuitem.show_dropdown %}
+                            <a href="#">{{ menuitem.title }}</a>
+                            {% top_menu_children parent=menuitem %}
+                        {% else %}
+                            <a href="{% pageurl menuitem %}">{{ menuitem.title }}</a>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+            <ul class="nav-menu right"></ul>
+        </nav>
+    </div>
+</header>
+
+{% comment %}
+                    <ul class="nav navbar-nav navbar-right">
+                        {% if request.user.is_authenticated %}
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ request.user.email }} <span class="caret"></span></a>
+                                <ul class="dropdown-menu" id="user-account-dropdown">
+                                    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                                    <li><a href="{% url 'account_info' %}">My Account</a></li>
+                                    <li><a href="{% url 'logout' %}?next=/">Log Out</a></li>
+                                </ul>
+                            </li>
+                        {% else %}
+                            <li><a href="{% url 'login' %}">Log In</a></li>
+                            <li><a href="{% url 'signup' %}">Sign Up</a></li>
+                        {% endif %}
+                    </ul>
+                {% endwith %}
+            </div>
+        </nav>
+{% endcomment %}
