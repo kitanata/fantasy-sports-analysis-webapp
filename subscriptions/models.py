@@ -3,8 +3,9 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 from django.utils.text import slugify
+from django.utils.dateformat import format as df
 from django.core.validators import RegexValidator
-from django.forms import CheckboxSelectMultiple
+from django.forms import CheckboxSelectMultiple, Select
 from decimal import Decimal
 from activecampaign import ActiveCampaign
 from wagtail.wagtailadmin.edit_handlers import (
@@ -228,26 +229,50 @@ class LineUp(models.Model):
 
     products = models.ManyToManyField(Product)
 
+    template_id = models.IntegerField(
+        blank=True,
+        null=True,
+        help_text='ActiveCampaign template to use when sending updates.'
+    )
+
     def products_list(self):
         return ', '.join([product.name for product in self.products.all()])
 
     products_list.verbose_name = 'List of Products'
 
+    def get_templates():
+        templates = []
+
+        response = ac.api('message_template_list', params={
+            'ids': 'all'
+        })
+
+        for k, v in response.items():
+            try:
+                template = (v['id'], v['name'],)
+                templates.append(template)
+            except AttributeError:
+                pass
+            except TypeError:
+                pass
+
+        return templates
+
     panels = [
         DocumentChooserPanel('pdf'),
         FieldPanel('date_uploaded'),
         FieldPanel('date_email_sent'),
-        FieldPanel('products', widget=CheckboxSelectMultiple)
+        FieldPanel('products', widget=CheckboxSelectMultiple),
+        FieldPanel(
+            'template_id',
+            widget=Select(
+                choices=get_templates()
+            )
+        )
     ]
 
     def __str__(self):
         return '#{}'.format(self.pk)
-
-    def save(self, *args, **kwargs):
-        # if self.campaign_id:
-        #     response = ac.api('campaign_create', method='post')
-
-        super(LineUp, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Line Up'
