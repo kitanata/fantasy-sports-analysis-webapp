@@ -72,12 +72,12 @@ def user_subscriptions(request):
     subscriptions_by_sport = []
     sports = Sport.objects.all().prefetch_related('product_set')
 
-    exsiting_subscriptions = request.user.subscription_set.filter(
+    existing_subscriptions = request.user.subscription_set.filter(
         state=Subscription.ACTIVE
     )
 
     for sport in sports:
-        existing_subscription = exsiting_subscriptions.filter(
+        existing_subscription = existing_subscriptions.filter(
             product__sport=sport
         ).first()
 
@@ -88,14 +88,16 @@ def user_subscriptions(request):
         }
 
         for product in sport.product_set.all().order_by('price'):
-            subscribed = product == existing_subscription.product
-
-            if existing_subscription.product.price < product.price:
-                label = 'Upgrade'
-            elif existing_subscription is None:
+            if existing_subscription is None:
                 label = 'Sign Up'
+                subscribed = False
             else:
-                label = 'Downgrade'
+                subscribed = product == existing_subscription.product
+
+                if existing_subscription.product.price < product.price:
+                    label = 'Upgrade'
+                else:
+                    label = 'Downgrade'
 
             sport_dict['products'].append({
                 'product': product,
@@ -187,23 +189,45 @@ def upgrade_subscription(request, plan_code):
                 recurly_subscription = recurly.Subscription.get(
                     subscription.uuid
                 )
-                recurly_subscription.plan_code = plan_code
-                recurly_subscription.timeframe = 'now'
-                recurly_subscription.save()
 
-                subscription.product = product
-                subscription.uuid = recurly_subscription.uuid
-                subscription.state = recurly_subscription.state
-                subscription.activated_at = recurly_subscription.activated_at
+                if recurly_subscription.plan_code != plan_code:
+                    recurly_subscription.plan_code = plan_code
+                    recurly_subscription.timeframe = 'now'
+                    recurly_subscription.save()
 
-                subscription.save()
+                    subscription.product = product
+                    subscription.uuid = recurly_subscription.uuid
+                    subscription.state = recurly_subscription.state
+                    subscription.activated_at = recurly_subscription.activated_at
 
-                messages.success(
-                    request,
-                    'Thank you for upgrading your subscription to {}!'.format(
-                        product.name
+                    subscription.save()
+
+                    messages.success(
+                        request,
+                        'Thank you for upgrading your subscription to {}!'.format(
+                            product.name
+                        )
                     )
-                )
+                else:
+                    recurly_subscription.cancel()
+                    recurly_subscription = recurly.Subscription.get(
+                        subscription.uuid
+                    )
+
+                    subscription.uuid = recurly_subscription.uuid
+                    subscription.state = recurly_subscription.state
+                    subscription.activated_at = recurly_subscription.activated_at
+                    subscription.canceled_at = recurly_subscription.canceled_at
+                    subscription.expires_at = recurly_subscription.expires_at
+
+                    subscription.save()
+
+                    messages.success(
+                        request,
+                        'You have successfully canceled your subscription to {}. We are sad to see you go.'.format(
+                            product.name
+                        )
+                    )
 
             return redirect(reverse('dashboard'))
 

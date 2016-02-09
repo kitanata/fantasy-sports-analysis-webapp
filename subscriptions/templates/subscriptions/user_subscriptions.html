@@ -23,7 +23,11 @@
                                     </div>
                                     <div class="hidden confirm-change">
                                         {% if sport.existing_subscription %}
-                                            <p>{{ value.label }} your Subscription?</p>
+                                            {% if value.is_subscribed %}
+                                                <p>Cancel your Subscription?</p>
+                                            {% else %}
+                                                <p>{{ value.label }} your Subscription?</p>
+                                            {% endif %}
                                         {% else %}
                                             <p>{{ value.label }} for this product? Your card on file will be immediately charged.</p>
                                         {% endif %}
