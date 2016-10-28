@@ -24,21 +24,21 @@ npm install --global gulp
 Next, we'll want to set up a postgres database. This can be done quite simply.
 
 ```sh
-createdb ackarma
+createdb mydb
 ```
 
 Now we'll clone the project. Assuming you've set up SSH for git/github, it'll look something like this:
 
 ```sh
 cd $PROJECTS_DIR
-git clone git@github.com:blueshiftedtech/ac-karma-sports-ffa.git
-cd ac-karma-sports-ffa
+git clone git@github.com:kitanata/fantasy-sports-analysis-webapp.git
+cd fantasy-sports-analysis-webapp
 ```
 
 Now, we should probably set up our python virtualenv. I'm assuming you have virtualenvwrapper installed here. If you don't, a quick `pip install virtualenvwrapper` will install virtualenv and virtualenvwrapper for you.
 
 ```sh
-mkvirtualenv ackarma --python=python3
+mkvirtualenv env --python=python3
 ```
 
 If you see (ackarma) appended to your shell prompt, you'll know it worked correctly.
